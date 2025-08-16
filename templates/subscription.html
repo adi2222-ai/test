@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="text-center mb-5">
+            <h1><i class="fas fa-star text-warning me-2"></i>Premium Subscription</h1>
+            <p class="lead text-muted">Unlock unlimited access to all OET preparation materials</p>
+        </div>
+
+        <!-- Current Subscription Status -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-{% if current_user.has_active_subscription() %}success{% else %}warning{% endif %} glass-card">
+                    <div class="card-body text-center">
+                        {% if current_user.has_active_subscription() %}
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h4 class="text-success">Premium Active</h4>
+                            <p class="mb-0">Your premium subscription is active until {{ current_user.subscription_expires }}</p>
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                            <h4 class="text-warning">No Active Subscription</h4>
+                            <p class="mb-0">Subscribe to access premium features and unlimited practice tests</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Plans -->
+        {% if not current_user.has_active_subscription() %}
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card border-primary h-100 glass-card hover-lift">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">Monthly Premium</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="display-4 text-primary mb-3">$300</div>
+                        <p class="text-muted">per month</p>
+
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited practice tests</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Full mock exams</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Detailed performance analytics</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Premium vocabulary content</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Priority support</li>
+                        </ul>
+
+
+                        <!-- for real stripe ancount -->
+
+
+                        <form method="POST" action="{{ url_for('create_checkout_session') }}">
+                            <input type="hidden" name="plan" value="monthly">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-credit-card me-2"></i>Subscribe Monthly
+                            </button>
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-success h-100 position-relative glass-card hover-lift">
+                    <div class="badge bg-success position-absolute top-0 start-50 translate-middle px-3 py-2">
+                        Best Value
+                    </div>
+                    <div class="card-header bg-success text-white text-center">
+                        <h4 class="mb-0">Yearly Premium</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="display-4 text-success mb-3">$300</div>
+                        <p class="text-muted">per year <small class="text-success">(Save $49!)</small></p>
+
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>All monthly features</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>2 months free</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Exclusive yearly content</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Personal study plan</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>One-on-one consultation</li>
+                        </ul>
+
+
+                        <!-- for real stripe ancount  -->
+
+                        <form method="POST" action="{{ url_for('create_checkout_session') }}">
+                            <input type="hidden" name="plan" value="yearly">
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-credit-card me-2"></i>Subscribe Yearly
+                            </button>
+                        </form>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Features Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="text-center mb-4">What's Included in Premium</h3>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 text-center h-100 glass-card">
+                    <div class="card-body">
+                        <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Unlimited Tests</h5>
+                        <p class="card-text">Access to all practice tests and full mock exams across all four OET sections.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 text-center h-100 glass-card">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Detailed Analytics</h5>
+                        <p class="card-text">Track your progress with comprehensive performance analytics and personalized insights.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 text-center h-100 glass-card">
+                    <div class="card-body">
+                        <i class="fas fa-book fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Premium Content</h5>
+                        <p class="card-text">Extended vocabulary database and exclusive study materials for better preparation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Security -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-light border-0 glass-card">
+                    <div class="card-body text-center">
+                        <h5 class="mb-3">
+                            <i class="fas fa-shield-alt text-success me-2"></i>
+                            Secure Payment Processing
+                        </h5>
+                        <p class="mb-2">
+                            Your payment information is secured with Stripe, trusted by millions of businesses worldwide.
+                        </p>
+                        <small class="text-muted">Cancel anytime • No hidden fees • 30-day money-back guarantee</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

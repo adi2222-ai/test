@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "word": "Auscultation",
+    "definition": "The practice of listening to internal body sounds using a stethoscope",
+    "specialty": "General Medicine",
+    "pronunciation": "/ˌɔːskəlˈteɪʃən/",
+    "usage_example": "The doctor performed auscultation of the patient's heart and lungs."
+  },
+  {
+    "id": 2,
+    "word": "Dyspnea",
+    "definition": "Difficulty or labored breathing; shortness of breath",
+    "specialty": "Cardiology",
+    "pronunciation": "/dɪspˈniːə/",
+    "usage_example": "The patient complained of dyspnea when climbing stairs."
+  },
+  {
+    "id": 3,
+    "word": "Hypertension",
+    "definition": "High blood pressure; a condition where blood pressure is consistently elevated",
+    "specialty": "Cardiology",
+    "pronunciation": "/ˌhaɪpərˈtɛnʃən/",
+    "usage_example": "The patient's hypertension requires medication management."
+  },
+  {
+    "id": 4,
+    "word": "Bradycardia",
+    "definition": "Slow heart rate, typically fewer than 60 beats per minute",
+    "specialty": "Cardiology",
+    "pronunciation": "/ˌbrædɪˈkɑːrdiə/",
+    "usage_example": "The ECG showed bradycardia with a rate of 45 bpm."
+  },
+  {
+    "id": 5,
+    "word": "Tachycardia",
+    "definition": "Fast heart rate, typically more than 100 beats per minute",
+    "specialty": "Cardiology",
+    "pronunciation": "/ˌtækɪˈkɑːrdiə/",
+    "usage_example": "The patient developed tachycardia following the procedure."
+  },
+  {
+    "id": 6,
+    "word": "Pneumonia",
+    "definition": "Infection that inflames air sacs in one or both lungs",
+    "specialty": "Respiratory Medicine",
+    "pronunciation": "/nuːˈmoʊniə/",
+    "usage_example": "The chest X-ray confirmed pneumonia in the right lower lobe."
+  },
+  {
+    "id": 7,
+    "word": "Bronchoscopy",
+    "definition": "A procedure to look inside the airways and lungs using a bronchoscope",
+    "specialty": "Respiratory Medicine",
+    "pronunciation": "/brɒŋˈkɒskəpi/",
+    "usage_example": "Bronchoscopy revealed inflammatory changes in the bronchi."
+  },
+  {
+    "id": 8,
+    "word": "Hemoptysis",
+    "definition": "Coughing up blood from the respiratory tract",
+    "specialty": "Respiratory Medicine",
+    "pronunciation": "/hɪˈmɒptəsɪs/",
+    "usage_example": "The patient presented with hemoptysis and chest pain."
+  },
+  {
+    "id": 9,
+    "word": "Myocardial Infarction",
+    "definition": "Heart attack; death of heart muscle due to blocked blood supply",
+    "specialty": "Cardiology",
+    "pronunciation": "/ˌmaɪoʊˈkɑːrdiəl ɪnˈfɑːrkʃən/",
+    "usage_example": "The patient was admitted with acute myocardial infarction."
+  },
+  {
+    "id": 10,
+    "word": "Angina",
+    "definition": "Chest pain caused by reduced blood flow to the heart",
+    "specialty": "Cardiology",
+    "pronunciation": "/ænˈdʒaɪnə/",
+    "usage_example": "The patient experiences angina during physical exertion."
+  },
+  {
+    "id": 11,
+    "word": "Diabetes Mellitus",
+    "definition": "A metabolic disorder characterized by high blood sugar levels",
+    "specialty": "Endocrinology",
+    "pronunciation": "/ˌdaɪəˈbiːtiːz məˈlaɪtəs/",
+    "usage_example": "The patient has Type 2 diabetes mellitus well controlled with metformin."
+  },
+  {
+    "id": 12,
+    "word": "Hypoglycemia",
+    "definition": "Low blood sugar level, typically below 70 mg/dL",
+    "specialty": "Endocrinology",
+    "pronunciation": "/ˌhaɪpoʊɡlaɪˈsiːmiə/",
+    "usage_example": "The patient experienced symptoms of hypoglycemia after insulin administration."
+  },
+  {
+    "id": 13,
+    "word": "Appendectomy",
+    "definition": "Surgical removal of the appendix",
+    "specialty": "Surgery",
+    "pronunciation": "/ˌæpənˈdɛktəmi/",
+    "usage_example": "The patient underwent laparoscopic appendectomy for acute appendicitis."
+  },
+  {
+    "id": 14,
+    "word": "Cholecystectomy",
+    "definition": "Surgical removal of the gallbladder",
+    "specialty": "Surgery",
+    "pronunciation": "/ˌkoʊləsɪˈstɛktəmi/",
+    "usage_example": "Cholecystectomy is recommended for recurrent gallstone attacks."
+  },
+  {
+    "id": 15,
+    "word": "Laparoscopy",
+    "definition": "Minimally invasive surgery using a laparoscope through small incisions",
+    "specialty": "Surgery",
+    "pronunciation": "/ˌlæpəˈrɒskəpi/",
+    "usage_example": "Diagnostic laparoscopy revealed adhesions in the pelvis."
+  },
+  {
+    "id": 16,
+    "word": "Hematoma",
+    "definition": "A collection of blood outside blood vessels, usually clotted",
+    "specialty": "General Medicine",
+    "pronunciation": "/ˌhiːməˈtoʊmə/",
+    "usage_example": "A large hematoma formed at the injection site."
+  },
+  {
+    "id": 17,
+    "word": "Thrombosis",
+    "definition": "Formation of a blood clot inside a blood vessel",
+    "specialty": "Hematology",
+    "pronunciation": "/θrɒmˈboʊsɪs/",
+    "usage_example": "Deep vein thrombosis was confirmed by duplex ultrasound."
+  },
+  {
+    "id": 18,
+    "word": "Embolism",
+    "definition": "Blockage of a blood vessel by a clot, air bubble, or other substance",
+    "specialty": "Vascular Medicine",
+    "pronunciation": "/ˈɛmbəˌlɪzəm/",
+    "usage_example": "Pulmonary embolism was ruled out with CT angiogram."
+  },
+  {
+    "id": 19,
+    "word": "Syncope",
+    "definition": "Temporary loss of consciousness due to insufficient blood flow to the brain",
+    "specialty": "Neurology",
+    "pronunciation": "/ˈsɪŋkəpi/",
+    "usage_example": "The patient experienced syncope during the procedure."
+  },
+  {
+    "id": 20,
+    "word": "Seizure",
+    "definition": "Sudden, uncontrolled electrical activity in the brain",
+    "specialty": "Neurology",
+    "pronunciation": "/ˈsiːʒər/",
+    "usage_example": "The patient had a generalized tonic-clonic seizure."
+  },
+  {
+    "id": 21,
+    "word": "Nephritis",
+    "definition": "Inflammation of the kidneys",
+    "specialty": "Nephrology",
+    "pronunciation": "/nəˈfraɪtɪs/",
+    "usage_example": "Acute nephritis was diagnosed based on urinalysis findings."
+  },
+  {
+    "id": 22,
+    "word": "Dialysis",
+    "definition": "Medical procedure to remove waste and excess water from blood when kidneys fail",
+    "specialty": "Nephrology",
+    "pronunciation": "/daɪˈæləsɪs/",
+    "usage_example": "The patient requires hemodialysis three times per week."
+  },
+  {
+    "id": 23,
+    "word": "Gastritis",
+    "definition": "Inflammation of the stomach lining",
+    "specialty": "Gastroenterology",
+    "pronunciation": "/ɡæˈstraɪtɪs/",
+    "usage_example": "Chronic gastritis was confirmed by endoscopy and biopsy."
+  },
+  {
+    "id": 24,
+    "word": "Endoscopy",
+    "definition": "Medical procedure using an endoscope to examine interior surfaces of an organ",
+    "specialty": "Gastroenterology",
+    "pronunciation": "/ɛnˈdɒskəpi/",
+    "usage_example": "Upper endoscopy revealed peptic ulcer disease."
+  },
+  {
+    "id": 25,
+    "word": "Fracture",
+    "definition": "Break in the continuity of a bone",
+    "specialty": "Orthopedics",
+    "pronunciation": "/ˈfræktʃər/",
+    "usage_example": "X-ray showed a displaced fracture of the femur."
+  },
+  {
+    "id": 26,
+    "word": "Osteoporosis",
+    "definition": "Condition where bones become weak and brittle",
+    "specialty": "Orthopedics",
+    "pronunciation": "/ˌɒstioʊpəˈroʊsɪs/",
+    "usage_example": "DEXA scan confirmed osteoporosis in the lumbar spine."
+  },
+  {
+    "id": 27,
+    "word": "Arthritis",
+    "definition": "Inflammation of one or more joints causing pain and stiffness",
+    "specialty": "Rheumatology",
+    "pronunciation": "/ɑːrˈθraɪtɪs/",
+    "usage_example": "Rheumatoid arthritis affects multiple joints symmetrically."
+  },
+  {
+    "id": 28,
+    "word": "Biopsy",
+    "definition": "Medical procedure involving extraction of tissue for diagnostic examination",
+    "specialty": "Pathology",
+    "pronunciation": "/ˈbaɪɒpsi/",
+    "usage_example": "Liver biopsy was performed to determine the cause of hepatitis."
+  },
+  {
+    "id": 29,
+    "word": "Malignant",
+    "definition": "Cancerous; having the properties of cancer",
+    "specialty": "Oncology",
+    "pronunciation": "/məˈlɪɡnənt/",
+    "usage_example": "Histology confirmed malignant cells in the lymph node."
+  },
+  {
+    "id": 30,
+    "word": "Benign",
+    "definition": "Non-cancerous; not harmful",
+    "specialty": "Oncology",
+    "pronunciation": "/bɪˈnaɪn/",
+    "usage_example": "The tumor was found to be benign on pathological examination."
+  }
+]

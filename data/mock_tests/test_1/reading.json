@@ -1,0 +1,108 @@
+{
+  "duration_minutes": 45,
+  "passages": [
+    {
+      "id": 0,
+      "title": "Diabetes Management in Adults",
+      "content": "<h3>Extract A </h3> (From: National Diabetes Guidelines, 2023)\r\nType 2 diabetes is a chronic condition characterized by insulin resistance and relative insulin deficiency. First-line management includes lifestyle modifications aimed at controlling blood glucose levels. Patients are advised to:\r\nFollow a balanced diet low in refined sugars and saturated fats.\r\nEngage in at least 150 minutes of moderate-intensity exercise per week.\r\nMaintain a healthy body weight through diet and physical activity.\r\nMonitor blood glucose regularly at home to track progress.\r\nRegular education and support from dietitians and diabetes nurses are essential to help patients implement these changes and prevent complications.\r\n\r\n<h3>Extract B </h3> (From: Hospital Drug Formulary – Diabetes Medications)\r\nPharmacological therapy is indicated if lifestyle modifications alone are insufficient. Common medications include:\r\nMetformin: first-line oral therapy; reduces hepatic glucose production and improves insulin sensitivity.\r\nSulfonylureas: stimulate insulin release but may cause hypoglycemia; used if metformin is not tolerated.\r\nGLP-1 receptor agonists: injectable agents that improve blood sugar control and may support weight loss.\r\nInsulin therapy: indicated for patients with very high blood glucose levels or when oral agents are ineffective.\r\nMedication choice depends on patient age, comorbidities, kidney function, and risk of side effects.\r\n\r\n<h3>Extract C </h3> (From: Patient Information Leaflet – Living with Diabetes)\r\nDiabetes often develops gradually and may not cause noticeable symptoms at first. Long-term uncontrolled diabetes can lead to complications such as heart disease, kidney disease, neuropathy, and vision problems. Patients should:\r\nAttend regular check-ups for blood sugar, blood pressure, and cholesterol.\r\nTake medications exactly as prescribed, even when feeling well.\r\nMonitor their feet daily for cuts, sores, or infections.\r\nSeek medical attention immediately if experiencing symptoms such as excessive thirst, frequent urination, blurred vision, or sudden weight loss.\r\nEducation and support from healthcare professionals help patients manage their condition effectively and prevent complications.\r\n\r\n<h3> Extract D </h3> (From: Journal of Clinical Endocrinology, 2022)\r\nContinuous glucose monitoring (CGM) has become increasingly valuable in diabetes care. CGM devices provide real-time glucose readings, track trends over 24 hours, and alert patients to hypo- or hyperglycemia. Studies show that CGM improves glycemic control, reduces hypoglycemia episodes, and increases patient engagement in self-management.\r\nWhile CGM is particularly useful for patients on intensive insulin therapy, it can also benefit those on oral medications. Healthcare professionals must provide training on device use, interpretation of readings, and integration into daily management plans."
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which extract outlines lifestyle recommendations for managing type 2 diabetes?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract B",
+        "Extract A",
+        "Extract D",
+        "Extract C"
+      ],
+      "correct_answer": 1
+    },
+    {
+      "id": 2,
+      "question": "Where would you find guidance on first-line pharmacological therapy for diabetes?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract C",
+        "Extract D",
+        "Extract B",
+        "Extract A"
+      ],
+      "correct_answer": 2
+    },
+    {
+      "id": 3,
+      "question": "Which extract explains potential long-term complications of uncontrolled diabetes?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract A",
+        "Extract C",
+        "Extract B",
+        "Extract D"
+      ],
+      "correct_answer": 1
+    },
+    {
+      "id": 4,
+      "question": "Where is advice given on monitoring feet and seeking medical attention for warning signs?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract D",
+        "Extract B",
+        "Extract C",
+        "Extract A"
+      ],
+      "correct_answer": 2
+    },
+    {
+      "id": 5,
+      "question": "Which extract highlights the use and benefits of continuous glucose monitoring (CGM)?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract A",
+        "Extract B",
+        "Extract D",
+        "Extract C"
+      ],
+      "correct_answer": 2
+    },
+    {
+      "id": 6,
+      "question": "In which extract is patient education and professional support emphasized as essential?",
+      "type": "multiple_choice",
+      "options": [
+        "Extract A",
+        "Extract D",
+        "Extract C",
+        "Extract B"
+      ],
+      "correct_answer": 0
+    },
+    {
+      "id": 7,
+      "question": "Which medications are mentioned as possible alternatives if metformin is not tolerated?",
+      "type": "multiple_choice",
+      "options": [
+        "Insulin, sulfonylureas, GLP-1 receptor agonists",
+        "ACE inhibitors, calcium channel blockers",
+        "Hydrocolloid and alginate dressings",
+        "Aspirin and statins"
+      ],
+      "correct_answer": 0
+    },
+    {
+      "id": 8,
+      "question": "Which extract gives specific recommendations for exercise and diet to control",
+      "type": "multiple_choice",
+      "options": [
+        "Extract C",
+        "Extract D",
+        "Extract A",
+        "Extract B"
+      ],
+      "correct_answer": 2
+    }
+  ]
+}

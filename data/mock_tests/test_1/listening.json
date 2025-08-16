@@ -1,0 +1,16 @@
+{
+  "duration_minutes": 30,
+  "audio_files": [],
+  "questions": [
+    {
+      "id": 1,
+      "question": "BBC",
+      "type": "multiple_choice",
+      "options": [
+        "1",
+        "2"
+      ],
+      "correct_answer": 0
+    }
+  ]
+}

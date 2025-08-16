@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ test.title }} - OET Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .test-interface {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-header {
+            background: var(--mirror-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--mirror-shadow);
+        }
+        
+        .test-timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .timer-warning {
+            color: #dc3545 !important;
+            animation: pulse 1s infinite;
+        }
+        
+        .question-container {
+            background: var(--mirror-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--mirror-shadow);
+            transition: var(--transition);
+        }
+        
+        .question-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--mirror-hover-shadow);
+        }
+        
+        .answer-option {
+            background: var(--mirror-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-small);
+            padding: 15px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            user-select: none;
+        }
+        
+        .answer-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.02);
+            transform: translateX(5px);
+        }
+        
+        .answer-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.05);
+            border-width: 3px;
+        }
+        
+        .answer-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .current-score {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: var(--border-radius-small);
+            margin-bottom: 20px;
+        }
+        
+        .score-excellent {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .score-good {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .score-needs-improvement {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .progress-section {
+            background: var(--mirror-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--mirror-shadow);
+        }
+        
+        .audio-controls {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: var(--border-radius-small);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .recording-status {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .passage-content {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 var(--border-radius-small) var(--border-radius-small) 0;
+        }
+        
+        .writing-area {
+            background: var(--mirror-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .word-count {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="test-interface">
+            <!-- Test Header -->
+            <div class="test-header">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2>{{ test.title }}</h2>
+                        <p class="mb-0 text-muted">{{ test.description }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="test-timer" data-duration="{{ test.duration_minutes }}">
+                                {{ '%02d:%02d'|format(test.duration_minutes, 0) }}
+                            </div>
+                            <small class="text-muted">Time Remaining</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="current-score">
+                            Current Score: 0%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="progress-text">0 of 0 questions answered</span>
+                    <span class="text-muted">{{ test.section }} Section</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+            </div>
+
+            <!-- Test Form -->
+            <form id="test-form" method="POST" action="/submit-test">
+                
+                <!-- Reading Section -->
+                {% if test.section == 'Reading' or test.section == 'All Sections' %}
+                <div class="section-content" data-section="reading">
+                    {% if test.content and test.content.sections and test.content.sections.reading %}
+                        {% set reading_section = test.content.sections.reading %}
+                        
+                        <!-- Passages -->
+                        {% for passage in reading_section.passages %}
+                        <div class="passage-content">
+                            <h4>{{ passage.title }}</h4>
+                            <div>{{ passage.content|safe }}</div>
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Questions -->
+                        {% for question in reading_section.questions %}
+                        <div class="question-container" data-question="question_{{ question.id }}" data-correct="{{ question.correct_answer }}">
+                            <h5>Question {{ question.id }}</h5>
+                            <p>{{ question.question }}</p>
+                            
+                            {% if question.type == 'multiple_choice' %}
+                                {% for i, option in enumerate(question.options) %}
+                                <div class="answer-option" data-question="question_{{ question.id }}" data-value="{{ i }}">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ i }}" id="q{{ question.id }}_{{ i }}">
+                                    <label for="q{{ question.id }}_{{ i }}">{{ option }}</label>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <textarea name="question_{{ question.id }}" class="form-control" rows="5" placeholder="Enter your answer here..."></textarea>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Listening Section -->
+                {% if test.section == 'Listening' or test.section == 'All Sections' %}
+                <div class="section-content" data-section="listening">
+                    {% if test.content and test.content.sections and test.content.sections.listening %}
+                        {% set listening_section = test.content.sections.listening %}
+                        
+                        <!-- Audio Files -->
+                        {% for audio in listening_section.audio_files %}
+                        <div class="audio-container mb-4">
+                            <h4>{{ audio.title }}</h4>
+                            {% if audio.url %}
+                            <audio controls class="w-100 mb-3">
+                                <source src="{{ audio.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            {% endif %}
+                            {% if audio.transcript %}
+                            <div class="transcript bg-light p-3 rounded">
+                                <strong>Transcript:</strong><br>
+                                {{ audio.transcript|safe }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Questions -->
+                        {% for question in listening_section.questions %}
+                        <div class="question-container" data-question="question_{{ question.id }}" data-correct="{{ question.correct_answer }}">
+                            <h5>Question {{ question.id }}</h5>
+                            <p>{{ question.question }}</p>
+                            
+                            {% if question.type == 'multiple_choice' %}
+                                {% for i, option in enumerate(question.options) %}
+                                <div class="answer-option" data-question="question_{{ question.id }}" data-value="{{ i }}">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ i }}" id="q{{ question.id }}_{{ i }}">
+                                    <label for="q{{ question.id }}_{{ i }}">{{ option }}</label>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Writing Section -->
+                {% if test.section == 'Writing' or test.section == 'All Sections' %}
+                <div class="section-content" data-section="writing">
+                    {% if test.content and test.content.sections and test.content.sections.writing %}
+                        {% set writing_section = test.content.sections.writing %}
+                        
+                        {% if writing_section.scenario %}
+                        <div class="scenario-content mb-4">
+                            <h4>Writing Task</h4>
+                            <div class="writing-area">
+                                {% for key, value in writing_section.scenario.items() %}
+                                    {% if value %}
+                                    <p><strong>{{ key.replace('_', ' ').title() }}:</strong> {{ value }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="question-container" data-question="question_writing">
+                            <h5>Your Response</h5>
+                            <textarea name="question_writing" id="writing_answer" class="form-control" rows="15" 
+                                      placeholder="Write your response here... (minimum 180 words recommended)"></textarea>
+                            <div class="word-count">
+                                Word count: <span id="wordCount">0</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Speaking Section -->
+                {% if test.section == 'Speaking' or test.section == 'All Sections' %}
+                <div class="section-content" data-section="speaking">
+                    {% if test.content and test.content.sections and test.content.sections.speaking %}
+                        {% set speaking_section = test.content.sections.speaking %}
+                        
+                        {% for roleplay in speaking_section.role_plays %}
+                        <div class="question-container" data-question-id="speaking_{{ roleplay.id }}">
+                            <h5>Role Play {{ roleplay.id + 1 }}</h5>
+                            <div class="roleplay-scenario mb-3">
+                                <p><strong>Setting:</strong> {{ roleplay.setting }}</p>
+                                <p><strong>Your Role:</strong> {{ roleplay.your_role }}</p>
+                                <p><strong>Patient:</strong> {{ roleplay.patient }}</p>
+                                <p><strong>Task:</strong> {{ roleplay.task }}</p>
+                                <p><strong>Time Limit:</strong> {{ roleplay.time_limit }} minutes</p>
+                            </div>
+                            
+                            <div class="audio-controls">
+                                <button type="button" class="btn btn-primary start-recording" 
+                                        onclick="startRecording('speaking_{{ roleplay.id }}')">
+                                    🎤 Start Recording
+                                </button>
+                                <button type="button" class="btn btn-danger stop-recording" style="display: none;" 
+                                        onclick="stopRecording()">
+                                    ⏹️ Stop Recording
+                                </button>
+                                <div class="recording-status mt-2">Ready to record</div>
+                            </div>
+                            
+                            <input type="hidden" name="question_speaking{{ roleplay.id + 1 }}" value="">
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Submit Section -->
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        📝 Submit Test
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/test-handler.js') }}"></script>
+    
+    <script>
+        // Word count for writing section
+        document.addEventListener('input', (e) => {
+            if (e.target.id === 'writing_answer') {
+                const text = e.target.value.trim();
+                const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+                document.getElementById('wordCount').textContent = wordCount;
+            }
+        });
+    </script>
+</body>
+</html>

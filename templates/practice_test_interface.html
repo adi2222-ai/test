@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Practice Test{% endblock %}
+
+{% block content %}
+<div class="test-interface">
+    <!-- Test Header -->
+    <div class="card border-primary mb-4 glass-card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="card-title mb-1">{{ test.title }}</h2>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-tag me-2"></i>{{ test.section }} Section - Practice Test
+                        {% if test.get('is_premium', False) %}
+                            <span class="badge bg-warning ms-2">Premium</span>
+                        {% endif %}
+                    </p>
+                    {% if test.description %}
+                        <p class="card-text small">{{ test.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="test-timer">
+                        <i class="fas fa-clock fa-2x text-primary"></i>
+                        <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                        <small class="text-muted">Time Remaining</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Content -->
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <div id="testContent">
+                    <!-- Dynamic content loaded from test data -->
+                    {% set sections = test.content.sections if test.content and test.content.sections else {} %}
+
+                    {% if test.section == 'Reading' %}
+                        {% if 'reading' in sections %}
+                            <!-- Reading Section -->
+                            <div id="readingSection" class="test-section">
+                                {% set reading = test.content.sections.reading if test.content.sections.reading else {} %}
+
+                                {% if reading.get('passages') or reading.get('questions') %}
+                                    <h3><i class="fas fa-book-open me-2"></i>Reading Section</h3>
+
+                                    <!-- Reading Passages -->
+                                    {% if reading.get('passages') %}
+                                        {% for passage in reading.passages %}
+                                        <div class="passage mb-4">
+                                            <h4>{{ passage.get('title', 'Reading Passage') }}</h4>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    {{ passage.get('content', '') | safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <!-- Reading Questions -->
+                                    {% if reading.get('questions') %}
+                                        {% for question in reading.questions %}
+                                        <div class="question-container mb-4">
+                                            <h5>Question {{ loop.index }}</h5>
+                                            <p>{{ question.get('question', '') }}</p>
+
+                                            {% if question.get('type') == 'multiple_choice' and question.get('options') %}
+                                                {% for option in question.options %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="question_{{ question.get('id', loop.index) }}" value="{{ loop.index0 }}" id="r{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                    <label class="form-check-label" for="r{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                        {{ option }}
+                                                    </label>
+                                                </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% if question.get('type') == 'text_input' %}
+                                                    <div class="mb-3">
+                                                        <input type="text" class="form-control" name="question_{{ question.get('id', loop.index) }}" placeholder="Enter your answer">
+                                                    </div>
+                                                {% else %}
+                                                    {% if question.get('type') == 'essay' %}
+                                                        <div class="mb-3">
+                                                            <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" rows="5" placeholder="Write your essay here"></textarea>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% else %}
+                                    <!-- Fallback to default reading content -->
+                                    {% include 'test_sections/reading_content.html' %}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            {% include 'test_sections/reading_content.html' %}
+                        {% endif %}
+
+                    {% elif test.section == 'Listening' %}
+                        {% if 'listening' in sections %}
+                            <div class="listening-test">
+                                <h3><i class="fas fa-headphones me-2"></i>Listening Section</h3>
+                                {% set listening = sections.listening %}
+
+                                <!-- Audio Files -->
+                                {% if listening.get('audio_files') %}
+                                    {% for audio in listening.audio_files %}
+                                    <div class="audio-container mb-4">
+                                        <div class="card border-info">
+                                            <div class="card-header bg-info text-white">
+                                                <h5 class="mb-0">{{ audio.get('title', 'Audio Clip ' + loop.index|string) }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                {% if audio.get('url') %}
+                                                <audio controls class="w-100 mb-3">
+                                                    <source src="{{ audio.url }}" type="audio/mpeg">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                                {% endif %}
+                                                {% if audio.get('transcript') %}
+                                                <div class="transcript mt-3 p-3 bg-light rounded">
+                                                    <strong>Transcript:</strong><br>
+                                                    {{ audio.transcript | safe }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <!-- Questions -->
+                                {% if listening.get('questions') %}
+                                    {% for question in listening.questions %}
+                                    <div class="question-container mb-4">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0">Question {{ loop.index }} of {{ listening.questions|length }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="question-text mb-3">{{ question.question }}</h6>
+
+                                                {% if question.type == 'multiple_choice' %}
+                                                    <div class="options">
+                                                        {% for option in question.options %}
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="radio" 
+                                                                   name="question_{{ question.get('id', loop.index) }}" 
+                                                                   value="{{ loop.index0 }}" 
+                                                                   id="q{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                            <label class="form-check-label" for="q{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                                <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                                            </label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="mb-3">
+                                                        <label for="answer_{{ question.get('id', loop.index) }}" class="form-label">Your Answer:</label>
+                                                        <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" 
+                                                                  id="answer_{{ question.get('id', loop.index) }}" rows="3" 
+                                                                  placeholder="Enter your answer here..."></textarea>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            {% include 'test_sections/listening_content.html' %}
+                        {% endif %}
+
+                    {% elif test.section == 'Writing' %}
+                        {% if 'writing' in sections %}
+                            <div class="writing-test">
+                                <h3><i class="fas fa-pen me-2"></i>Writing Section</h3>
+                                {% set writing = sections.writing %}
+
+                                <!-- Writing Scenario -->
+                                {% if writing.get('scenario') %}
+                                {% set scenario = writing.scenario %}
+                                <div class="scenario mb-4">
+                                    <div class="card border-info">
+                                        <div class="card-header bg-info text-white">
+                                            <h5 class="mb-0">Case Notes</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            {% if scenario.get('patient_name') %}
+                                            <p><strong>Patient:</strong> {{ scenario.patient_name }}{% if scenario.get('age') %}, {{ scenario.age }} years old{% endif %}</p>
+                                            {% endif %}
+                                            {% if scenario.get('presenting_complaint') %}
+                                            <p><strong>Presenting complaint:</strong> {{ scenario.presenting_complaint }}</p>
+                                            {% endif %}
+                                            {% if scenario.get('examination_findings') %}
+                                            <p><strong>Examination findings:</strong> {{ scenario.examination_findings }}</p>
+                                            {% endif %}
+                                            {% if scenario.get('referral_to') %}
+                                            <p><strong>Referral to:</strong> {{ scenario.referral_to }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="writing-task">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning">
+                                            <h5 class="mb-0">Writing Task</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6>{{ scenario.get('task_instructions', 'Write a referral letter based on the case notes above.') }}</h6>
+
+                                            <div class="mb-3">
+                                                <label for="writing_answer" class="form-label">Your Response:</label>
+                                                <textarea class="form-control" name="question_writing" id="writing_answer" rows="15" 
+                                                          placeholder="Write your response here..."></textarea>
+                                            </div>
+
+                                            <div class="word-count">
+                                                <small class="text-muted">Word count: <span id="wordCount">0</span> / 180-200 words recommended</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Writing Questions if any -->
+                                {% if writing.get('questions') %}
+                                    {% for question in writing.questions %}
+                                    <div class="question-container mb-4">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0">Question {{ loop.index }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="question-text mb-3">{{ question.question }}</h6>
+
+                                                {% if question.type == 'multiple_choice' %}
+                                                    <div class="options">
+                                                        {% for option in question.options %}
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="radio" 
+                                                                   name="question_{{ question.get('id', loop.index) }}" 
+                                                                   value="{{ loop.index0 }}" 
+                                                                   id="wq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                            <label class="form-check-label" for="wq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                                <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                                            </label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="mb-3">
+                                                        <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" rows="5" 
+                                                                  placeholder="Enter your answer here..."></textarea>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            {% include 'test_sections/writing_content.html' %}
+                        {% endif %}
+
+                    {% elif test.section == 'Speaking' %}
+                        {% if 'speaking' in sections %}
+                            <div class="speaking-test">
+                                <h3><i class="fas fa-microphone me-2"></i>Speaking Section</h3>
+                                {% set speaking = sections.speaking %}
+
+                                {% if speaking.get('role_plays') %}
+                                    {% for roleplay in speaking.role_plays %}
+                                    <div class="roleplay mb-4">
+                                        <div class="card border-warning">
+                                            <div class="card-header bg-warning">
+                                                <h5 class="mb-0">Role Play {{ loop.index }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p><strong>Setting:</strong> {{ roleplay.get('setting', 'General Practice Clinic') }}</p>
+                                                <p><strong>Your Role:</strong> {{ roleplay.get('your_role', 'Healthcare Professional') }}</p>
+                                                <p><strong>Patient:</strong> {{ roleplay.get('patient', 'Patient details') }}</p>
+                                                <p><strong>Task:</strong> {{ roleplay.get('task', 'Complete the consultation') }}</p>
+                                                <p><strong>Time Limit:</strong> {{ roleplay.get('time_limit', 5) }} minutes</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <!-- Speaking Questions if any -->
+                                {% if speaking.get('questions') %}
+                                    {% for question in speaking.questions %}
+                                    <div class="question-container mb-4">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0">Speaking Task {{ loop.index }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="question-text mb-3">{{ question.question }}</h6>
+
+                                                {% if question.type == 'multiple_choice' %}
+                                                    <div class="options">
+                                                        {% for option in question.options %}
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="radio" 
+                                                                   name="question_{{ question.get('id', loop.index) }}" 
+                                                                   value="{{ loop.index0 }}" 
+                                                                   id="sq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                            <label class="form-check-label" for="sq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                                <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                                            </label>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="mb-3">
+                                                        <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" rows="3" 
+                                                                  placeholder="Describe your speaking response or key points..."></textarea>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <!-- Recording Interface -->
+                                <div class="recording-section">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h5 class="mb-0">Voice Recording</h5>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <p class="text-muted">Record your response for the speaking task</p>
+
+                                            <div class="recording-controls mb-3">
+                                                <button type="button" id="startRecording" class="btn btn-success me-2">
+                                                    <i class="fas fa-microphone"></i> Start Recording
+                                                </button>
+                                                <button type="button" id="stopRecording" class="btn btn-danger me-2" disabled>
+                                                    <i class="fas fa-stop"></i> Stop Recording
+                                                </button>
+                                                <button type="button" id="playRecording" class="btn btn-info" disabled>
+                                                    <i class="fas fa-play"></i> Play Back
+                                                </button>
+                                            </div>
+
+                                            <div class="timer">
+                                                <span id="recordingTimer">00:00</span> / 05:00
+                                            </div>
+
+                                            <div class="status mt-2">
+                                                <span id="recordingStatus" class="text-muted">Ready to record</span>
+                                            </div>
+
+                                            <audio id="audioPlayback" style="display: none;" controls></audio>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="question_speaking" id="speakingData" value="">
+                            </div>
+                        {% else %}
+                            {% include 'test_sections/speaking_content.html' %}
+                        {% endif %}
+
+                    {% else %}
+                        <!-- Fallback content -->
+                        {% include 'test_sections/reading_content.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>Submit Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Add any JavaScript for test functionality here
+document.addEventListener('DOMContentLoaded', function() {
+    // Word count functionality for writing section
+    const writingTextarea = document.getElementById('writing_answer');
+    const wordCountSpan = document.getElementById('wordCount');
+
+    if (writingTextarea && wordCountSpan) {
+        writingTextarea.addEventListener('input', function() {
+            const text = this.value.trim();
+            const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+            wordCountSpan.textContent = wordCount;
+        });
+    }
+
+    // Recording functionality for speaking section
+    let mediaRecorder;
+    let audioChunks = [];
+    let recordingTimer;
+    let startTime;
+
+    const startBtn = document.getElementById('startRecording');
+    const stopBtn = document.getElementById('stopRecording');
+    const playBtn = document.getElementById('playRecording');
+    const timerSpan = document.getElementById('recordingTimer');
+    const statusSpan = document.getElementById('recordingStatus');
+    const audioPlayback = document.getElementById('audioPlayback');
+    const speakingData = document.getElementById('speakingData');
+
+    if (startBtn && stopBtn) {
+        startBtn.addEventListener('click', async function() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+
+                    if (audioPlayback) {
+                        audioPlayback.src = audioUrl;
+                        audioPlayback.style.display = 'block';
+                    }
+                    if (playBtn) playBtn.disabled = false;
+
+                    // Convert to base64 for storage
+                    const reader = new FileReader();
+                    reader.onloadend = function() {
+                        if (speakingData) speakingData.value = reader.result;
+                    };
+                    reader.readAsDataURL(audioBlob);
+
+                    if (statusSpan) statusSpan.textContent = 'Recording completed';
+                };
+
+                mediaRecorder.start();
+                startTime = Date.now();
+
+                // Update UI
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                if (statusSpan) statusSpan.textContent = 'Recording...';
+
+                // Start timer
+                recordingTimer = setInterval(updateTimer, 1000);
+
+                // Auto-stop after 5 minutes
+                setTimeout(() => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        stopRecording();
+                    }
+                }, 300000);
+
+            } catch (err) {
+                alert('Could not access microphone: ' + err.message);
+            }
+        });
+
+        stopBtn.addEventListener('click', stopRecording);
+    }
+
+    function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
+            clearInterval(recordingTimer);
+
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+    }
+
+    function updateTimer() {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        if (timerSpan) {
+            timerSpan.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+    }
+
+    if (playBtn && audioPlayback) {
+        playBtn.addEventListener('click', function() {
+            if (audioPlayback.paused) {
+                audioPlayback.play();
+            } else {
+                audioPlayback.pause();
+            }
+        });
+    }
+
+    console.log('Test interface loaded');
+});
+</script>
+{% endblock %}

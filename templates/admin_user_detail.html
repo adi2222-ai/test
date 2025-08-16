@@ -1,0 +1,120 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }} - User Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-user me-2"></i>{{ user.username }}</h1>
+        <a href="{{ url_for('search_users') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Search
+        </a>
+    </div>
+
+    <!-- User Info -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Subscription:</strong> 
+                        {% if user.subscription_type %}
+                            <span class="badge bg-success">{{ user.subscription_type }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Free</span>
+                        {% endif %}
+                    </p>
+                    {% if user.subscription_expires %}
+                    <p><strong>Expires:</strong> {{ user.subscription_expires }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Practice Tests:</strong> {{ test_results|length }}</p>
+                    <p><strong>Mock Tests:</strong> {{ mock_results|length }}</p>
+                    <p><strong>Vocabulary Progress:</strong> 
+                        {{ vocab_progress.learned_words|length if vocab_progress and vocab_progress.learned_words else 0 }} words learned
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Results -->
+    {% if test_results %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Practice Test Results</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Test ID</th>
+                            <th>Score</th>
+                            <th>Time Taken</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in test_results[-10:] %}
+                        <tr>
+                            <td>{{ result.test_id }}</td>
+                            <td>{{ "%.1f"|format(result.score_percentage) }}%</td>
+                            <td>{{ result.time_taken_minutes }} min</td>
+                            <td>{{ result.completed_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Mock Test Results -->
+    {% if mock_results %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Mock Test Results</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Test ID</th>
+                            <th>Score</th>
+                            <th>Time Taken</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in mock_results[-10:] %}
+                        <tr>
+                            <td>{{ result.test_id }}</td>
+                            <td>{{ "%.1f"|format(result.score_percentage) }}%</td>
+                            <td>{{ result.time_taken_minutes }} min</td>
+                            <td>{{ result.completed_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

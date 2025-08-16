@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Test Results - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Results Header -->
+        <div class="card border-0 shadow-lg mb-4 glass-card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    {% if result.score_percentage >= 80 %}
+                        <i class="fas fa-star fa-4x text-success"></i>
+                    {% elif result.score_percentage >= 60 %}
+                        <i class="fas fa-check-circle fa-4x text-warning"></i>
+                    {% else %}
+                        <i class="fas fa-exclamation-triangle fa-4x text-danger"></i>
+                    {% endif %}
+                </div>
+                
+                <h1 class="mb-3">Test Completed!</h1>
+                <h2 class="{% if result.score_percentage >= 80 %}text-success{% elif result.score_percentage >= 60 %}text-warning{% else %}text-danger{% endif %} mb-4">
+                    {{ "%.1f"|format(result.score_percentage) }}%
+                </h2>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-file-alt text-primary mb-2"></i>
+                                <h6>Test</h6>
+                                <p class="mb-0 small">{{ test.get('title', 'Unknown Test') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-clock text-info mb-2"></i>
+                                <h6>Time Taken</h6>
+                                <p class="mb-0">{{ result.time_taken_minutes }} minutes</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar text-secondary mb-2"></i>
+                                <h6>Completed</h6>
+                                <p class="mb-0 small">{{ result.completed_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Analysis -->
+        <div class="card border-0 shadow-sm mb-4 glass-card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Performance Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Overall Performance</span>
+                                <span class="fw-bold">{{ "%.1f"|format(result.score_percentage) }}%</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar {% if result.score_percentage >= 80 %}bg-success{% elif result.score_percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                     style="width: {{ result.score_percentage }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="performance-feedback">
+                            {% if result.score_percentage >= 80 %}
+                                <div class="alert alert-success">
+                                    <h6><i class="fas fa-star me-2"></i>Excellent Performance!</h6>
+                                    <p class="mb-0">You've demonstrated strong understanding of the material. Keep up the great work!</p>
+                                </div>
+                            {% elif result.score_percentage >= 60 %}
+                                <div class="alert alert-warning">
+                                    <h6><i class="fas fa-check me-2"></i>Good Performance</h6>
+                                    <p class="mb-0">You're on the right track! Focus on areas where you can improve further.</p>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-danger">
+                                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Needs Improvement</h6>
+                                    <p class="mb-0">Consider reviewing the material and taking additional practice tests.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Study Recommendations:</h6>
+                        <ul class="list-unstyled">
+                            {% if result.score_percentage < 80 %}
+                                <li class="mb-2">
+                                    <i class="fas fa-book text-primary me-2"></i>
+                                    Review vocabulary for {{ test.get('section', 'this') }} section
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-redo text-success me-2"></i>
+                                    Take similar practice tests
+                                </li>
+                            {% endif %}
+                            <li class="mb-2">
+                                <i class="fas fa-chart-line text-info me-2"></i>
+                                Track your progress in the dashboard
+                            </li>
+                            {% if not current_user.has_active_subscription() %}
+                                <li class="mb-2">
+                                    <i class="fas fa-star text-warning me-2"></i>
+                                    Consider premium subscription for unlimited practice
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('take_test', test_id=result.test_id) }}" class="btn btn-primary w-100 btn-lg">
+                            <i class="fas fa-redo me-2"></i>Try Again
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <a href="{{ url_for('practice_tests') }}" class="btn btn-outline-secondary w-100 btn-lg">
+                            <i class="fas fa-list me-2"></i>More Tests
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-success w-100 btn-lg">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <a href="{{ url_for('progress') }}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-chart-line me-2"></i>View Progress
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <a href="{{ url_for('vocabulary') }}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-book me-2"></i>Study Vocabulary
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="card border-0 shadow-sm mt-4 glass-card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-lightbulb me-2 text-warning"></i>What's Next?
+                </h6>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="small text-muted mb-2">IMMEDIATE STEPS:</h6>
+                        <ul class="list-unstyled small">
+                            <li class="mb-2">
+                                <i class="fas fa-arrow-right text-primary me-2"></i>
+                                Review incorrect answers
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-arrow-right text-primary me-2"></i>
+                                Practice similar question types
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-arrow-right text-primary me-2"></i>
+                                Focus on weak areas
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6 class="small text-muted mb-2">LONG-TERM GOALS:</h6>
+                        <ul class="list-unstyled small">
+                            <li class="mb-2">
+                                <i class="fas fa-target text-success me-2"></i>
+                                Aim for consistent 80%+ scores
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-target text-success me-2"></i>
+                                Complete full mock exams
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-target text-success me-2"></i>
+                                Track improvement over time
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

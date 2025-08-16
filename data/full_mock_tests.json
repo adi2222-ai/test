@@ -1,0 +1,695 @@
+[
+  {
+    "id": 100,
+    "title": "Complete OET Mock Test 1",
+    "section": "All Sections",
+    "duration_minutes": 140,
+    "description": "Full OET simulation covering all sections - Listening, Reading, Writing, and Speaking",
+    "is_mock_test": true,
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 60,
+          "passages": [
+            {
+              "id": 1000,
+              "title": "Hi",
+              "content": "Hi there is e beautiful day"
+            }
+          ],
+          "questions": [
+            {
+              "id": 10,
+              "question": "What is the recommended follow-up period?",
+              "type": "multiple_choice",
+              "options": [
+                "1 week",
+                "2 weeks",
+                "1 month",
+                "6 weeks"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 6,
+              "question": "According to the medication leaflet, how often should the antibiotic be taken?",
+              "type": "multiple_choice",
+              "options": [
+                "Once daily",
+                "Twice daily",
+                "Three times daily",
+                "Four times daily"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 7,
+              "question": "What is the most serious side effect mentioned?",
+              "type": "multiple_choice",
+              "options": [
+                "Nausea",
+                "Allergic reaction",
+                "Drowsiness",
+                "Headache"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 8,
+              "question": "What should patients do if they miss a dose?",
+              "type": "multiple_choice",
+              "options": [
+                "Take double dose next time",
+                "Skip the missed dose",
+                "Take as soon as remembered",
+                "Contact doctor"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 9,
+              "question": "According to the discharge summary, what was the primary diagnosis?",
+              "type": "multiple_choice",
+              "options": [
+                "Pneumonia",
+                "Heart attack",
+                "Stroke",
+                "Diabetes"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "listening": {
+          "duration_minutes": 45,
+          "questions": [
+            {
+              "id": 1,
+              "question": "What is the patient's main complaint?",
+              "type": "multiple_choice",
+              "options": [
+                "Back pain",
+                "Chest pain",
+                "Headache",
+                "Stomach ache"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 2,
+              "question": "How long has the patient had symptoms?",
+              "type": "multiple_choice",
+              "options": [
+                "2 days",
+                "1 week",
+                "3 weeks",
+                "2 months"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 3,
+              "question": "What medication is prescribed?",
+              "type": "multiple_choice",
+              "options": [
+                "Paracetamol",
+                "Ibuprofen",
+                "Tramadol",
+                "Codeine"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 4,
+              "question": "What diagnostic test is recommended?",
+              "type": "multiple_choice",
+              "options": [
+                "X-ray",
+                "MRI",
+                "CT scan",
+                "Ultrasound"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 5,
+              "question": "When should the patient return for follow-up?",
+              "type": "multiple_choice",
+              "options": [
+                "1 week",
+                "2 weeks",
+                "1 month",
+                "3 months"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "patient_name": "John Mitchell",
+            "age": "58",
+            "presenting_complaint": "Progressive shortness of breath and fatigue over 4 weeks",
+            "examination_findings": "Bilateral ankle swelling, elevated JVP, chest X-ray shows cardiomegaly",
+            "referral_to": "Cardiology",
+            "task_instructions": "Write a referral letter based on the case notes above."
+          }
+        },
+        "speaking": {
+          "duration_minutes": 20,
+          "role_plays": [
+            {
+              "id": 0,
+              "setting": "General Practice",
+              "your_role": "General Practitioner",
+              "patient": "Mrs. Thompson, 42, concerned about irregular periods",
+              "task": "Take history and provide appropriate advice",
+              "time_limit": 5
+            },
+            {
+              "id": 1,
+              "setting": "Hospital Ward",
+              "your_role": "Staff Nurse",
+              "patient": "Mr. Davies, 65, post-operative confusion",
+              "task": "Reassure patient and explain procedures",
+              "time_limit": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 101,
+    "title": "Complete OET Mock Test 2",
+    "section": "All Sections",
+    "duration_minutes": 140,
+    "description": "Advanced OET simulation with challenging scenarios across all sections",
+    "is_mock_test": true,
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "listening": {
+          "duration_minutes": 45,
+          "parts": [
+            "Part A: Consultation",
+            "Part B: Health Talk",
+            "Part C: Hospital Extract"
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "What type of diabetes does the patient have?",
+              "type": "multiple_choice",
+              "options": [
+                "Type 1",
+                "Type 2",
+                "Gestational",
+                "Pre-diabetes"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "What is the patient's HbA1c level?",
+              "type": "multiple_choice",
+              "options": [
+                "7.2%",
+                "8.5%",
+                "9.1%",
+                "6.8%"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 3,
+              "question": "Which medication is being increased?",
+              "type": "multiple_choice",
+              "options": [
+                "Metformin",
+                "Insulin",
+                "Gliclazide",
+                "Sitagliptin"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 4,
+              "question": "How often should blood glucose be monitored?",
+              "type": "multiple_choice",
+              "options": [
+                "Once daily",
+                "Twice daily",
+                "Three times daily",
+                "Four times daily"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 5,
+              "question": "When is the next appointment scheduled?",
+              "type": "multiple_choice",
+              "options": [
+                "2 weeks",
+                "4 weeks",
+                "6 weeks",
+                "3 months"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        },
+        "reading": {
+          "duration_minutes": 60,
+          "parts": [
+            "Part A: Expedited Reading",
+            "Part B: Multi-text Reading",
+            "Part C: Text Completion"
+          ],
+          "questions": [
+            {
+              "id": 6,
+              "question": "What is the recommended dosage for the new medication?",
+              "type": "multiple_choice",
+              "options": [
+                "5mg once daily",
+                "10mg twice daily",
+                "15mg three times daily",
+                "20mg once daily"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 7,
+              "question": "Which patients should avoid this medication?",
+              "type": "multiple_choice",
+              "options": [
+                "Elderly patients",
+                "Pregnant women",
+                "Children under 12",
+                "Patients with kidney disease"
+              ],
+              "correct_answer": 3
+            },
+            {
+              "id": 8,
+              "question": "What monitoring is required during treatment?",
+              "type": "multiple_choice",
+              "options": [
+                "Blood pressure",
+                "Liver function",
+                "Blood glucose",
+                "Heart rate"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 9,
+              "question": "According to the clinical guidelines, what is the first-line treatment?",
+              "type": "multiple_choice",
+              "options": [
+                "Lifestyle changes",
+                "Medication",
+                "Surgery",
+                "Physiotherapy"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 10,
+              "question": "What is the target blood pressure for diabetic patients?",
+              "type": "multiple_choice",
+              "options": [
+                "<140/90",
+                "<130/80",
+                "<120/80",
+                "<110/70"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "task_type": "referral_letter",
+          "scenario": {
+            "patient_name": "Sarah Wilson",
+            "age": 34,
+            "presenting_complaint": "Recurrent episodes of severe abdominal pain with nausea and vomiting",
+            "examination_findings": "Right upper quadrant tenderness, Murphy's sign positive, ultrasound shows gallstones",
+            "current_medication": "Omeprazole 20mg daily, PRN paracetamol",
+            "referral_to": "General Surgery",
+            "urgency": "Routine"
+          },
+          "requirements": [
+            "Patient demographics and presenting complaint",
+            "Relevant history and examination findings",
+            "Investigation results",
+            "Current management and response",
+            "Reason for referral and specific requests"
+          ]
+        },
+        "speaking": {
+          "duration_minutes": 20,
+          "role_plays": [
+            {
+              "id": 1,
+              "setting": "Emergency Department",
+              "your_role": "Emergency Nurse",
+              "patient": "Mr. Roberts, 28, motorcycle accident victim",
+              "task": "Assess pain and provide initial care instructions",
+              "time_limit": 5
+            },
+            {
+              "id": 2,
+              "setting": "Outpatient Clinic",
+              "your_role": "Physiotherapist",
+              "patient": "Mrs. Green, 55, recovering from knee replacement",
+              "task": "Explain exercise program and progress expectations",
+              "time_limit": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 102,
+    "title": "Complete OET Mock Test 3",
+    "section": "All Sections",
+    "duration_minutes": 140,
+    "description": "Comprehensive OET practice test with complex medical scenarios",
+    "is_mock_test": true,
+    "is_premium": true,
+    "content": {
+      "sections": {
+        "listening": {
+          "duration_minutes": 45,
+          "parts": [
+            "Part A: Consultation",
+            "Part B: Health Talk",
+            "Part C: Hospital Extract"
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "What is the suspected diagnosis?",
+              "type": "multiple_choice",
+              "options": [
+                "Appendicitis",
+                "Gastroenteritis",
+                "Gallstones",
+                "Peptic ulcer"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 2,
+              "question": "What investigation is ordered first?",
+              "type": "multiple_choice",
+              "options": [
+                "Blood tests",
+                "Ultrasound",
+                "CT scan",
+                "X-ray"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 3,
+              "question": "What is the patient advised regarding food intake?",
+              "type": "multiple_choice",
+              "options": [
+                "Light meals only",
+                "Liquid diet",
+                "Nothing by mouth",
+                "Normal diet"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 4,
+              "question": "What should the patient do if pain worsens?",
+              "type": "multiple_choice",
+              "options": [
+                "Take more painkillers",
+                "Apply heat",
+                "Return immediately",
+                "Wait 24 hours"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 5,
+              "question": "Who will see the patient next?",
+              "type": "multiple_choice",
+              "options": [
+                "GP",
+                "Surgeon",
+                "Gastroenterologist",
+                "Radiologist"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "reading": {
+          "duration_minutes": 60,
+          "parts": [
+            "Part A: Expedited Reading",
+            "Part B: Multi-text Reading",
+            "Part C: Text Completion"
+          ],
+          "questions": [
+            {
+              "id": 6,
+              "question": "What is the maximum daily dose of this medication?",
+              "type": "multiple_choice",
+              "options": [
+                "400mg",
+                "600mg",
+                "800mg",
+                "1000mg"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 7,
+              "question": "Which condition is a contraindication for this treatment?",
+              "type": "multiple_choice",
+              "options": [
+                "Hypertension",
+                "Asthma",
+                "Diabetes",
+                "Arthritis"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 8,
+              "question": "When should the medication be discontinued?",
+              "type": "multiple_choice",
+              "options": [
+                "After 5 days",
+                "When symptoms improve",
+                "If side effects occur",
+                "After completing course"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 9,
+              "question": "According to the research, what percentage of patients improved?",
+              "type": "multiple_choice",
+              "options": [
+                "65%",
+                "72%",
+                "78%",
+                "84%"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 10,
+              "question": "What is the recommended follow-up interval?",
+              "type": "multiple_choice",
+              "options": [
+                "Weekly",
+                "Fortnightly",
+                "Monthly",
+                "Quarterly"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "task_type": "referral_letter",
+          "scenario": {
+            "patient_name": "Michael Chen",
+            "age": 71,
+            "presenting_complaint": "Progressive memory loss and confusion over 18 months",
+            "examination_findings": "MMSE score 18/30, difficulty with activities of daily living, family reports personality changes",
+            "current_medication": "Donepezil 10mg daily, Memantine 10mg BD",
+            "referral_to": "Memory Clinic",
+            "urgency": "Routine"
+          },
+          "requirements": [
+            "Patient demographics and presenting complaint",
+            "Cognitive assessment results",
+            "Functional impact and family concerns",
+            "Current treatments and response",
+            "Specific requests for specialist assessment"
+          ]
+        },
+        "speaking": {
+          "duration_minutes": 20,
+          "role_plays": [
+            {
+              "id": 1,
+              "setting": "Oncology Unit",
+              "your_role": "Oncology Nurse",
+              "patient": "Mrs. Adams, 48, newly diagnosed with breast cancer",
+              "task": "Provide emotional support and explain treatment timeline",
+              "time_limit": 5
+            },
+            {
+              "id": 2,
+              "setting": "Pediatric Ward",
+              "your_role": "Pediatric Nurse",
+              "patient": "Tommy (age 8) and his mother, post-tonsillectomy",
+              "task": "Explain post-operative care and pain management",
+              "time_limit": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 103,
+    "title": "Mock test 4",
+    "section": "All Sections",
+    "duration_minutes": 60,
+    "description": "Hi there",
+    "is_mock_test": true,
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 45
+        },
+        "listening": {
+          "duration_minutes": 30
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "task_instructions": "Write a referral letter based on the case notes above."
+          }
+        },
+        "speaking": {
+          "duration_minutes": 20
+        }
+      }
+    }
+  },
+  {
+    "id": 104,
+    "title": "Oet reading",
+    "section": "Reading",
+    "duration_minutes": 60,
+    "description": "",
+    "is_mock_test": true,
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 45,
+          "passages": [
+            {
+              "id": 1000,
+              "title": "Passage 1",
+              "content": "Hi ther"
+            }
+          ],
+          "questions": [
+            {
+              "id": 1000,
+              "question": "Hi there",
+              "type": "multiple_choice",
+              "options": [
+                "1",
+                "2",
+                "3"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "listening": {
+          "duration_minutes": 30
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "task_instructions": "Write a referral letter based on the case notes above."
+          }
+        },
+        "speaking": {
+          "duration_minutes": 20
+        }
+      }
+    }
+  },
+  {
+    "id": 105,
+    "title": "wet",
+    "section": "Writing",
+    "duration_minutes": 60,
+    "description": "werwrw",
+    "is_mock_test": true,
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 45,
+          "passages": [
+            {
+              "id": 1000,
+              "title": "werwr",
+              "content": "wervccfffasdfvascf"
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "fsdfvsc",
+              "type": "multiple_choice",
+              "options": [
+                "scdf",
+                "sdfc"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        },
+        "listening": {
+          "duration_minutes": 30
+        },
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "task_instructions": "Write a referral letter based on the case notes above."
+          }
+        },
+        "speaking": {
+          "duration_minutes": 20
+        }
+      }
+    }
+  }
+]

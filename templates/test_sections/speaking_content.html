@@ -1,0 +1,188 @@
+
+<!-- Speaking Test Content -->
+<div class="speaking-test">
+    <h3>Speaking Section</h3>
+
+    <!-- Role Play Scenario -->
+    <div class="scenario mb-4">
+        <h4>Role Play Scenario</h4>
+        <div class="card mirror-card">
+            <div class="card-body">
+                <p><strong>Setting:</strong> General Practice Clinic</p>
+                <p><strong>Your Role:</strong> General Practitioner</p>
+                <p><strong>Patient:</strong> John Miller, 32 years old, presenting with persistent cough</p>
+                <p><strong>Task:</strong> Take a medical history and provide appropriate advice</p>
+                <hr>
+                <p><strong>Scenario Details:</strong></p>
+                <ul>
+                    <li>Patient has had a dry cough for 3 weeks</li>
+                    <li>No fever or other symptoms initially</li>
+                    <li>Recently started experiencing night sweats</li>
+                    <li>Works in an office environment</li>
+                    <li>Non-smoker, no significant medical history</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speaking Task -->
+    <div class="question-container mb-4 mirror-card">
+        <h5>Speaking Task</h5>
+        <p>You have 3 minutes to:</p>
+        <ol>
+            <li>Greet the patient and introduce yourself</li>
+            <li>Take a detailed history of the presenting complaint</li>
+            <li>Ask relevant follow-up questions</li>
+            <li>Provide reassurance and explain next steps</li>
+        </ol>
+
+        <!-- Recording Controls -->
+        <div class="recording-section mt-4">
+            <div class="card border-info mirror-card">
+                <div class="card-body text-center">
+                    <h6>Voice Recording</h6>
+                    <p class="text-muted">Click start to begin your role play response</p>
+                    
+                    <div class="recording-controls mb-3">
+                        <button type="button" id="startRecording" class="btn btn-success me-2">
+                            <i class="fas fa-microphone"></i> Start Recording
+                        </button>
+                        <button type="button" id="stopRecording" class="btn btn-danger me-2" disabled>
+                            <i class="fas fa-stop"></i> Stop Recording
+                        </button>
+                        <button type="button" id="playRecording" class="btn btn-info" disabled>
+                            <i class="fas fa-play"></i> Play Back
+                        </button>
+                    </div>
+                    
+                    <div class="timer">
+                        <span id="recordingTimer">00:00</span> / 03:00
+                    </div>
+                    
+                    <div class="status mt-2">
+                        <span id="recordingStatus" class="text-muted">Ready to record</span>
+                    </div>
+                    
+                    <audio id="audioPlayback" style="display: none;" controls></audio>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hidden input to store recording data -->
+        <input type="hidden" name="question_speaking" id="speakingData" value="">
+    </div>
+</div>
+
+<script>
+let mediaRecorder;
+let audioChunks = [];
+let recordingTimer;
+let startTime;
+
+document.getElementById('startRecording').addEventListener('click', async function() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            document.getElementById('audioPlayback').src = audioUrl;
+            document.getElementById('audioPlayback').style.display = 'block';
+            document.getElementById('playRecording').disabled = false;
+            
+            // Upload audio to server
+            const formData = new FormData();
+            formData.append('audio_data', audioBlob, 'speaking_recording.webm');
+            
+            try {
+                const response = await fetch('/upload_audio', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    document.getElementById('speakingData').value = 'audio_recorded';
+                    document.getElementById('recordingStatus').textContent = 'Recording saved successfully';
+                } else {
+                    document.getElementById('recordingStatus').textContent = 'Failed to save recording';
+                }
+            } catch (error) {
+                console.error('Error uploading audio:', error);
+                document.getElementById('recordingStatus').textContent = 'Error uploading recording';
+            }
+        };
+        
+        mediaRecorder.start();
+        startTime = Date.now();
+        
+        // Update UI
+        document.getElementById('startRecording').disabled = true;
+        document.getElementById('stopRecording').disabled = false;
+        document.getElementById('recordingStatus').textContent = 'Recording...';
+        
+        // Start timer
+        recordingTimer = setInterval(updateTimer, 1000);
+        
+        // Auto-stop after 3 minutes
+        setTimeout(() => {
+            if (mediaRecorder.state === 'recording') {
+                stopRecording();
+            }
+        }, 180000);
+        
+    } catch (err) {
+        alert('Could not access microphone: ' + err.message);
+    }
+});
+
+document.getElementById('stopRecording').addEventListener('click', stopRecording);
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        
+        clearInterval(recordingTimer);
+        
+        document.getElementById('startRecording').disabled = false;
+        document.getElementById('stopRecording').disabled = true;
+    }
+}
+
+function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    document.getElementById('recordingTimer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+document.getElementById('playRecording').addEventListener('click', function() {
+    const audio = document.getElementById('audioPlayback');
+    if (audio.paused) {
+        audio.play();
+    } else {
+        audio.pause();
+    }
+});
+
+// Speaking assessment criteria (for manual evaluation)
+const speakingCriteria = {
+    'fluency': 'Natural pace and rhythm',
+    'pronunciation': 'Clear and understandable',
+    'content': 'Appropriate medical communication',
+    'interaction': 'Effective patient engagement'
+};
+
+window.testAnswers = {
+    'question_speaking': 'manual_grading_required'
+};
+</script>

@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - OET Preparation{% endblock %}
+
+{% block content %}
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    <div class="text-center">
+        <div class="error-page">
+            <div class="error-code">
+                <h1 class="display-1 text-primary">404</h1>
+            </div>
+            <div class="error-content">
+                <h2 class="mb-4">Page Not Found</h2>
+                <p class="lead text-muted mb-4">
+                    Sorry, the page you are looking for doesn't exist or has been moved.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{{ url_for('dashboard' if current_user.is_authenticated else 'mock_tests') }}" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <a href="{{ url_for('practice_tests') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-dumbbell me-2"></i>Practice Tests
+                    </a>
+                    <a href="{{ url_for('mock_tests') }}" class="btn btn-outline-success">
+                        <i class="fas fa-clipboard-list me-2"></i>Mock Tests
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    max-width: 600px;
+}
+
+.error-code h1 {
+    font-size: 8rem;
+    font-weight: 900;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .error-code h1 {
+        font-size: 5rem;
+    }
+    
+    .d-flex.gap-3 {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .d-flex.gap-3 .btn {
+        width: 200px;
+    }
+}
+</style>
+{% endblock %}

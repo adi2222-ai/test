@@ -1,0 +1,291 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 70.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_4": "",
+      "question_5": ""
+    },
+    "completed_at": "2025-08-14 09:31"
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 70.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "2",
+      "question_4": "",
+      "question_5": ""
+    },
+    "completed_at": "2025-08-14 09:33"
+  },
+  {
+    "id": 3,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_4": "",
+      "question_5": ""
+    },
+    "completed_at": "2025-08-14 09:38"
+  },
+  {
+    "id": 4,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "0",
+      "question_4": "",
+      "question_5": ""
+    },
+    "completed_at": "2025-08-14 09:50"
+  },
+  {
+    "id": 5,
+    "user_id": 2,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_writing": "fsdfsfsdfsfssd",
+      "question_speaking1": "",
+      "question_speaking2": ""
+    },
+    "completed_at": "2025-08-14 10:49"
+  },
+  {
+    "id": 6,
+    "user_id": 1,
+    "test_id": 104,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1000": "0",
+      "question_writing": ""
+    },
+    "completed_at": "2025-08-14 11:12"
+  },
+  {
+    "id": 7,
+    "user_id": 1,
+    "test_id": 104,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1000": "1",
+      "question_writing": ""
+    },
+    "completed_at": "2025-08-14 11:12"
+  },
+  {
+    "id": 8,
+    "user_id": 1,
+    "test_id": 104,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1000": "2",
+      "question_writing": ""
+    },
+    "completed_at": "2025-08-14 11:18"
+  },
+  {
+    "id": 9,
+    "user_id": 1,
+    "test_id": 106,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {},
+    "completed_at": "2025-08-14 11:36"
+  },
+  {
+    "id": 10,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "2",
+      "question_3": "0",
+      "question_4": "2",
+      "question_5": "0",
+      "question_writing": "",
+      "question_speaking": ""
+    },
+    "completed_at": "2025-08-14 13:31"
+  },
+  {
+    "id": 11,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "0",
+      "question_2": "0",
+      "question_3": "0",
+      "question_4": "0",
+      "question_5": "0",
+      "question_writing": "",
+      "question_speaking": ""
+    },
+    "completed_at": "2025-08-14 13:31"
+  },
+  {
+    "id": 12,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "1",
+      "question_3": "1",
+      "question_4": "3",
+      "question_5": "2",
+      "question_writing": "Ndjdjd",
+      "question_speaking": "Benje"
+    },
+    "completed_at": "2025-08-14 13:51"
+  },
+  {
+    "id": 13,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "1",
+      "question_3": "1",
+      "question_4": "2",
+      "question_5": "1",
+      "question_writing": "efwafea",
+      "question_speaking": "sadf"
+    },
+    "completed_at": "2025-08-14 13:59"
+  },
+  {
+    "id": 14,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 46.2,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "1",
+      "question_3": "1",
+      "question_4": "2",
+      "question_5": "2",
+      "question_writing": "zxc",
+      "question_speaking": "zxc"
+    },
+    "completed_at": "2025-08-14 14:05"
+  },
+  {
+    "id": 15,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "0",
+      "question_2": "0",
+      "question_3": "2",
+      "question_4": "3",
+      "question_5": "3",
+      "question_writing": "Ghhh",
+      "question_speaking": "The yu"
+    },
+    "completed_at": "2025-08-14 14:34"
+  },
+  {
+    "id": 16,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 30.8,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "0",
+      "question_3": "1",
+      "question_4": "0",
+      "question_5": "2",
+      "question_writing": "Vu",
+      "question_speaking": "Guu"
+    },
+    "completed_at": "2025-08-14 14:36"
+  },
+  {
+    "id": 17,
+    "user_id": 1,
+    "test_id": 100,
+    "score_percentage": 46.2,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "1",
+      "question_3": "2",
+      "question_4": "1",
+      "question_5": "2",
+      "question_writing": "das",
+      "question_speaking": "asd"
+    },
+    "completed_at": "2025-08-14 15:18"
+  },
+  {
+    "id": 18,
+    "user_id": 4,
+    "test_id": 102,
+    "score_percentage": 0.0,
+    "time_taken_minutes": 1,
+    "answers": {},
+    "completed_at": "2025-08-14 16:50"
+  },
+  {
+    "id": 19,
+    "user_id": 4,
+    "test_id": 100,
+    "score_percentage": 30.8,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "1",
+      "question_2": "1",
+      "question_3": "0",
+      "question_4": "0",
+      "question_5": "0",
+      "question_writing": "J k k k k k k",
+      "question_speaking": "N m m"
+    },
+    "completed_at": "2025-08-15 10:15"
+  },
+  {
+    "id": 20,
+    "user_id": 1,
+    "test_id": 1,
+    "score_percentage": 44.4,
+    "time_taken_minutes": 1,
+    "answers": {
+      "question_1": "0",
+      "question_2": "0",
+      "question_3": "0",
+      "question_4": "0",
+      "question_5": "0",
+      "question_6": "0",
+      "question_7": "0",
+      "question_8": "2",
+      "question_writing": "sdasd"
+    },
+    "completed_at": "2025-08-16 11:44"
+  }
+]

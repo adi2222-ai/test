@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "username": "adriatikdamzi",
+    "email": "adriatik.damzi@outlook.com",
+    "password_hash": "scrypt:32768:8:1$OZjlNOswK2WcnfZb$a00157076de9a65763aa000e65946bd7a93aced02f793b5f33bbd54753a3a46516dd4465e290e2d3289fc152935d3a04ddbef4a384b1509854fa6cb54d30ce40",
+    "subscription_type": "premium",
+    "subscription_expires": "2026-08-09T15:00:00.000000",
+    "created_at": "2025-08-09T15:52:35.347057",
+    "is_superuser": true
+  },
+  {
+    "id": 2,
+    "username": "adriatik",
+    "email": "adriatik.damzi@gmail.com",
+    "password_hash": "scrypt:32768:8:1$bWRZW2iUXVsJ7ETe$aa8d78f547900bcce6213d66c704dc3186d5e5020fb32d189d6fdaf781f2ed6034f76d8a27ed8a0a8518139df3681c0becf63bb8e1e47bdf35c5d1074ef4bf5e",
+    "subscription_type": "premium",
+    "subscription_expires": "2026-08-09T15:00:00.000000",
+    "created_at": "2025-08-09T15:52:35.347057"
+  },
+  {
+    "id": 3,
+    "username": "premium_user",
+    "email": "premium@oetstudent.com",
+    "password_hash": "scrypt:32768:8:1$OZjlNOswK2WcnfZb$a00157076de9a65763aa000e65946bd7a93aced02f793b5f33bbd54753a3a46516dd4465e290e2d3289fc152935d3a04ddbef4a384b1509854fa6cb54d30ce40",
+    "subscription_type": "premium",
+    "subscription_expires": "2026-08-09T15:00:00.000000",
+    "created_at": "2025-08-09T15:00:00.000000"
+  },
+  {
+    "id": 4,
+    "username": "Funny",
+    "email": "funnyfunn2021@gmail.con",
+    "password_hash": "scrypt:32768:8:1$7fBbwxuS1HqKiXb2$2364ba893e8851fb263dfe8bc1d1f913266084001036b8c661a461ee48705faa6bef7f7d9c164cbdbdddbe2f755a123ad444f14f4eeac3f7662813d8fb4425ff",
+    "subscription_type": null,
+    "subscription_expires": null,
+    "created_at": "2025-08-14T15:27:43.404854"
+  }
+]

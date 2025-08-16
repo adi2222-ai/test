@@ -1,0 +1,334 @@
+<!-- Listening Test Content -->
+<div class="listening-test">
+    <h3>Listening Section</h3>
+
+    <!-- Part A: Note Completion -->
+    <div class="audio-section mb-4">
+        <h4>Part A: Consultation Extract</h4>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Instructions:</strong> Listen to the following conversation between a doctor and patient. Complete the notes by choosing the correct option.</p>
+                <div class="audio-player">
+                    <audio controls class="w-100">
+                        <source src="/static/audio/consultation.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <p class="mt-2"><em>Note: In a real test, audio would be provided. For this demo, please read the transcript below and answer accordingly.</em></p>
+                <div class="transcript mt-3 p-3 bg-light rounded">
+                    <strong>Transcript:</strong><br>
+                    <strong>Doctor:</strong> "Good morning, Mrs. Smith. How long have you been experiencing these symptoms?"<br>
+                    <strong>Patient:</strong> "About three weeks now, doctor. The pain started gradually and has been getting worse. It's mainly in my lower back, but sometimes shoots down my left leg."<br>
+                    <strong>Doctor:</strong> "I see. On a scale of 1 to 10, how would you rate the pain?"<br>
+                    <strong>Patient:</strong> "It's about a 7 most days, but can go up to 9 when I try to bend or lift anything."<br>
+                    <strong>Doctor:</strong> "Have you tried any pain relief?"<br>
+                    <strong>Patient:</strong> "Yes, I've been taking ibuprofen twice daily, but it's not helping much."<br>
+                    <strong>Doctor:</strong> "I'm going to refer you for an MRI scan and prescribe some stronger pain medication. Let's start with tramadol - take one tablet three times daily with food."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions 1-5 for Part A -->
+    <div class="question-container mb-4">
+        <h5>Question 1</h5>
+        <p>What is the patient's name?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_1', '0')">
+            <input class="form-check-input" type="radio" name="question_1" id="q1_0" value="0">
+            <label class="form-check-label w-100" for="q1_0">
+                Mrs. Johnson
+            </label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_1', '1')">
+            <input class="form-check-input" type="radio" name="question_1" id="q1_1" value="1">
+            <label class="form-check-label w-100" for="q1_1">
+                Mrs. Smith
+            </label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_1', '2')">
+            <input class="form-check-input" type="radio" name="question_1" id="q1_2" value="2">
+            <label class="form-check-label w-100" for="q1_2">
+                Mrs. Brown
+            </label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_1', '3')">
+            <input class="form-check-input" type="radio" name="question_1" id="q1_3" value="3">
+            <label class="form-check-label w-100" for="q1_3">
+                Mrs. Davis
+            </label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 2</h5>
+        <p>How long has the patient been experiencing symptoms?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_2', '0')">
+            <input class="form-check-input" type="radio" name="question_2" id="q2_0" value="0">
+            <label class="form-check-label w-100" for="q2_0">2 days</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_2', '1')">
+            <input class="form-check-input" type="radio" name="question_2" id="q2_1" value="1">
+            <label class="form-check-label w-100" for="q2_1">1 week</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_2', '2')">
+            <input class="form-check-input" type="radio" name="question_2" id="q2_2" value="2">
+            <label class="form-check-label w-100" for="q2_2">3 weeks</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_2', '3')">
+            <input class="form-check-input" type="radio" name="question_2" id="q2_3" value="3">
+            <label class="form-check-label w-100" for="q2_3">2 months</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 3</h5>
+        <p>What is the patient's current pain level on most days?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_3', '0')">
+            <input class="form-check-input" type="radio" name="question_3" id="q3_0" value="0">
+            <label class="form-check-label w-100" for="q3_0">5 out of 10</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_3', '1')">
+            <input class="form-check-input" type="radio" name="question_3" id="q3_1" value="1">
+            <label class="form-check-label w-100" for="q3_1">7 out of 10</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_3', '2')">
+            <input class="form-check-input" type="radio" name="question_3" id="q3_2" value="2">
+            <label class="form-check-label w-100" for="q3_2">9 out of 10</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_3', '3')">
+            <input class="form-check-input" type="radio" name="question_3" id="q3_3" value="3">
+            <label class="form-check-label w-100" for="q3_3">3 out of 10</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 4</h5>
+        <p>What medication has the patient been taking?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_4', '0')">
+            <input class="form-check-input" type="radio" name="question_4" id="q4_0" value="0">
+            <label class="form-check-label w-100" for="q4_0">Paracetamol</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_4', '1')">
+            <input class="form-check-input" type="radio" name="question_4" id="q4_1" value="1">
+            <label class="form-check-label w-100" for="q4_1">Ibuprofen</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_4', '2')">
+            <input class="form-check-input" type="radio" name="question_4" id="q4_2" value="2">
+            <label class="form-check-label w-100" for="q4_2">Tramadol</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_4', '3')">
+            <input class="form-check-input" type="radio" name="question_4" id="q4_3" value="3">
+            <label class="form-check-label w-100" for="q4_3">Aspirin</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 5</h5>
+        <p>What new medication is the doctor prescribing?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_5', '0')">
+            <input class="form-check-input" type="radio" name="question_5" id="q5_0" value="0">
+            <label class="form-check-label w-100" for="q5_0">Codeine</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_5', '1')">
+            <input class="form-check-input" type="radio" name="question_5" id="q5_1" value="1">
+            <label class="form-check-label w-100" for="q5_1">Tramadol</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_5', '2')">
+            <input class="form-check-input" type="radio" name="question_5" id="q5_2" value="2">
+            <label class="form-check-label w-100" for="q5_2">Morphine</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_5', '3')">
+            <input class="form-check-input" type="radio" name="question_5" id="q5_3" value="3">
+            <label class="form-check-label w-100" for="q5_3">Diclofenac</label>
+        </div>
+    </div>
+
+    <!-- Part B: Lecture Extract -->
+    <div class="audio-section mb-4">
+        <h4>Part B: Healthcare Professional Presentation</h4>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Instructions:</strong> Listen to this extract from a presentation about infection control and answer the questions.</p>
+                <div class="transcript mt-3 p-3 bg-light rounded">
+                    <strong>Transcript Extract:</strong><br>
+                    "Good morning, everyone. Today we're discussing hand hygiene in healthcare settings. Research shows that proper hand washing can reduce healthcare-associated infections by up to 40%. The World Health Organization recommends the 'Five Moments for Hand Hygiene': before touching a patient, before clean procedures, after body fluid exposure, after touching a patient, and after touching patient surroundings. Each hand washing episode should last at least 20 seconds using soap and water, or 15 seconds when using alcohol-based hand rub. Remember, rings and watches should be removed before the procedure, and nails should be kept short and clean."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions 6-10 for Part B -->
+    <div class="question-container mb-4">
+        <h5>Question 6</h5>
+        <p>By what percentage can proper hand washing reduce healthcare-associated infections?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_6', '0')">
+            <input class="form-check-input" type="radio" name="question_6" id="q6_0" value="0">
+            <label class="form-check-label w-100" for="q6_0">Up to 30%</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_6', '1')">
+            <input class="form-check-input" type="radio" name="question_6" id="q6_1" value="1">
+            <label class="form-check-label w-100" for="q6_1">Up to 40%</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_6', '2')">
+            <input class="form-check-input" type="radio" name="question_6" id="q6_2" value="2">
+            <label class="form-check-label w-100" for="q6_2">Up to 50%</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_6', '3')">
+            <input class="form-check-input" type="radio" name="question_6" id="q6_3" value="3">
+            <label class="form-check-label w-100" for="q6_3">Up to 60%</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 7</h5>
+        <p>How many moments for hand hygiene does the WHO recommend?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_7', '0')">
+            <input class="form-check-input" type="radio" name="question_7" id="q7_0" value="0">
+            <label class="form-check-label w-100" for="q7_0">Three</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_7', '1')">
+            <input class="form-check-input" type="radio" name="question_7" id="q7_1" value="1">
+            <label class="form-check-label w-100" for="q7_1">Four</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_7', '2')">
+            <input class="form-check-input" type="radio" name="question_7" id="q7_2" value="2">
+            <label class="form-check-label w-100" for="q7_2">Five</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_7', '3')">
+            <input class="form-check-input" type="radio" name="question_7" id="q7_3" value="3">
+            <label class="form-check-label w-100" for="q7_3">Six</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 8</h5>
+        <p>How long should hand washing with soap and water last?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_8', '0')">
+            <input class="form-check-input" type="radio" name="question_8" id="q8_0" value="0">
+            <label class="form-check-label w-100" for="q8_0">At least 15 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_8', '1')">
+            <input class="form-check-input" type="radio" name="question_8" id="q8_1" value="1">
+            <label class="form-check-label w-100" for="q8_1">At least 20 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_8', '2')">
+            <input class="form-check-input" type="radio" name="question_8" id="q8_2" value="2">
+            <label class="form-check-label w-100" for="q8_2">At least 30 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_8', '3')">
+            <input class="form-check-input" type="radio" name="question_8" id="q8_3" value="3">
+            <label class="form-check-label w-100" for="q8_3">At least 45 seconds</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 9</h5>
+        <p>How long should alcohol-based hand rub be used?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_9', '0')">
+            <input class="form-check-input" type="radio" name="question_9" id="q9_0" value="0">
+            <label class="form-check-label w-100" for="q9_0">10 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_9', '1')">
+            <input class="form-check-input" type="radio" name="question_9" id="q9_1" value="1">
+            <label class="form-check-label w-100" for="q9_1">15 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_9', '2')">
+            <input class="form-check-input" type="radio" name="question_9" id="q9_2" value="2">
+            <label class="form-check-label w-100" for="q9_2">20 seconds</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_9', '3')">
+            <input class="form-check-input" type="radio" name="question_9" id="q9_3" value="3">
+            <label class="form-check-label w-100" for="q9_3">25 seconds</label>
+        </div>
+    </div>
+
+    <div class="question-container mb-4">
+        <h5>Question 10</h5>
+        <p>What should be removed before hand hygiene procedures?</p>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_10', '0')">
+            <input class="form-check-input" type="radio" name="question_10" id="q10_0" value="0">
+            <label class="form-check-label w-100" for="q10_0">Gloves only</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_10', '1')">
+            <input class="form-check-input" type="radio" name="question_10" id="q10_1" value="1">
+            <label class="form-check-label w-100" for="q10_1">Rings and watches</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_10', '2')">
+            <input class="form-check-input" type="radio" name="question_10" id="q10_2" value="2">
+            <label class="form-check-label w-100" for="q10_2">Aprons only</label>
+        </div>
+        <div class="form-check clickable-option" onclick="selectAnswer('question_10', '3')">
+            <input class="form-check-input" type="radio" name="question_10" id="q10_3" value="3">
+            <label class="form-check-label w-100" for="q10_3">Face masks</label>
+        </div>
+    </div>
+</div>
+
+<script>
+// Correct answers for scoring
+const correctAnswers = {
+    'question_1': '1',  // Mrs. Smith
+    'question_2': '2',  // 3 weeks
+    'question_3': '1',  // 7 out of 10
+    'question_4': '1',  // Ibuprofen
+    'question_5': '1',  // Tramadol
+    'question_6': '1',  // Up to 40%
+    'question_7': '2',  // Five
+    'question_8': '1',  // At least 20 seconds
+    'question_9': '1',  // 15 seconds
+    'question_10': '1'  // Rings and watches
+};
+
+// Store correct answers in a global variable for access in routes
+window.testAnswers = correctAnswers;
+
+function selectAnswer(questionName, selectedValue) {
+    // Set the radio button's checked state
+    const radioButton = document.querySelector(`input[name="${questionName}"][value="${selectedValue}"]`);
+    if (radioButton) {
+        radioButton.checked = true;
+    }
+    // Optionally, you could trigger a submit or a score update here
+    // For now, we just ensure the radio button is selected.
+}
+
+function calculateScore() {
+    let score = 0;
+    let totalQuestions = Object.keys(correctAnswers).length;
+    let correctCount = 0;
+
+    for (let i = 1; i <= totalQuestions; i++) {
+        const questionName = `question_${i}`;
+        const selectedAnswer = document.querySelector(`input[name="${questionName}"]:checked`);
+
+        if (selectedAnswer) {
+            if (selectedAnswer.value === correctAnswers[questionName]) {
+                correctCount++;
+            }
+        }
+    }
+
+    // Calculate score based on the new logic
+    if (totalQuestions > 0) {
+        if (correctCount === totalQuestions) {
+            score = 100; // All questions correct
+        } else if (correctCount > 0) {
+            score = (correctCount / totalQuestions) * 100;
+        } else {
+            score = 0; // No correct answers
+        }
+    }
+
+    // Apply the specific rule: if only one question and it's correct, give 100%.
+    // If there are multiple questions and only one correct answer is selected, give 50%.
+    if (totalQuestions === 1 && correctCount === 1) {
+        score = 100;
+    } else if (totalQuestions > 1 && correctCount === 1) {
+        score = 50;
+    }
+
+
+    alert(`Your score is: ${score.toFixed(0)}%`);
+    return score;
+}
+</script>

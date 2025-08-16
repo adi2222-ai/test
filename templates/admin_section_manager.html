@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+
+{% block title %}Section Manager - {{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-layer-group me-2"></i>Section Manager: {{ test.title }}</h2>
+                    <p class="text-muted mb-0">Manage individual sections stored in separate files</p>
+                </div>
+                <a href="{{ url_for('admin_edit_test', test_id=test.id) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Test Editor
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Cards -->
+    <div class="row">
+        {% for section_name in ['reading', 'listening', 'writing', 'speaking'] %}
+        {% set section_data = test.content.sections.get(section_name, {}) %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-{% if section_name == 'reading' %}primary{% elif section_name == 'listening' %}success{% elif section_name == 'writing' %}warning{% else %}danger{% endif %} text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            {% if section_name == 'reading' %}
+                                <i class="fas fa-book-open me-2"></i>Reading
+                            {% elif section_name == 'listening' %}
+                                <i class="fas fa-headphones me-2"></i>Listening
+                            {% elif section_name == 'writing' %}
+                                <i class="fas fa-pen me-2"></i>Writing
+                            {% else %}
+                                <i class="fas fa-microphone me-2"></i>Speaking
+                            {% endif %}
+                        </h5>
+                        <small>{{ section_data.get('duration_minutes', 0) }}min</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2 mb-3">
+                        {% if section_name == 'reading' %}
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('passages', [])|length }}</div>
+                                    <small class="text-muted">Passages</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('questions', [])|length }}</div>
+                                    <small class="text-muted">Questions</small>
+                                </div>
+                            </div>
+                        {% elif section_name == 'listening' %}
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('audio_files', [])|length }}</div>
+                                    <small class="text-muted">Audio Files</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('questions', [])|length }}</div>
+                                    <small class="text-muted">Questions</small>
+                                </div>
+                            </div>
+                        {% elif section_name == 'writing' %}
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{% if section_data.get('scenario') %}1{% else %}0{% endif %}</div>
+                                    <small class="text-muted">Scenario</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('questions', [])|length }}</div>
+                                    <small class="text-muted">Questions</small>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('role_plays', [])|length }}</div>
+                                    <small class="text-muted">Role Plays</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="h4 mb-1">{{ section_data.get('questions', [])|length }}</div>
+                                    <small class="text-muted">Questions</small>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="text-center">
+                        <button class="btn btn-sm btn-outline-{% if section_name == 'reading' %}primary{% elif section_name == 'listening' %}success{% elif section_name == 'writing' %}warning{% else %}danger{% endif %}" 
+                                onclick="editSection('{{ section_name }}', {{ test.id }})">
+                            <i class="fas fa-edit me-2"></i>Edit Section
+                        </button>
+                    </div>
+                </div>
+                <div class="card-footer text-muted small">
+                    File: /data/{{ 'mock_tests' if test.test_type == 'mock' else 'tests' }}/test_{{ test.id }}/{{ section_name }}.json
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function editSection(sectionName, testId) {
+    // Redirect to section-specific editor
+    window.location.href = `/admin/edit-test/${testId}#${sectionName}Section`;
+}
+</script>
+{% endblock %}

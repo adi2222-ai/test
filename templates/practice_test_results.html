@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Practice Test Results - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Results Header -->
+        <div class="card border-0 shadow-lg mb-4 glass-card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    {% if result.score_percentage >= 80 %}
+                        <i class="fas fa-star fa-4x text-success"></i>
+                    {% elif result.score_percentage >= 60 %}
+                        <i class="fas fa-check-circle fa-4x text-warning"></i>
+                    {% else %}
+                        <i class="fas fa-exclamation-triangle fa-4x text-danger"></i>
+                    {% endif %}
+                </div>
+
+                <h1 class="mb-3">Practice Test Completed!</h1>
+                <h2 class="{% if result.score_percentage >= 80 %}text-success{% elif result.score_percentage >= 60 %}text-warning{% else %}text-danger{% endif %} mb-4">
+                    {{ "%.1f"|format(result.score_percentage|float) }}%
+                </h2>
+
+                <!-- Performance Analysis -->
+                <div class="alert {% if result.score_percentage >= 80 %}alert-success{% elif result.score_percentage >= 60 %}alert-warning{% else %}alert-danger{% endif %} mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {% if result.score_percentage >= 80 %}
+                        <strong>Excellent!</strong> You have a strong understanding of the material.
+                    {% elif result.score_percentage >= 60 %}
+                        <strong>Good work!</strong> You're on the right track. Keep practicing to improve.
+                    {% else %}
+                        <strong>Keep studying!</strong> Consider reviewing the material and taking more practice tests.
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-file-alt text-primary mb-2"></i>
+                                <h6>Test</h6>
+                                <p class="mb-0 small">{{ test.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-clock text-info mb-2"></i>
+                                <h6>Time Taken</h6>
+                                <p class="mb-0">{{ result.time_taken_minutes }} minutes</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar text-secondary mb-2"></i>
+                                <h6>Completed</h6>
+                                <p class="mb-0 small">{{ result.completed_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-primary w-100">
+                            <i class="fas fa-redo me-2"></i>Try Again
+                        </a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <a href="{{ url_for('download_test_pdf', result_id=result.id) }}" class="btn btn-success w-100">
+                            <i class="fas fa-download me-2"></i>Download PDF
+                        </a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <a href="{{ url_for('practice_tests') }}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-list me-2"></i>More Tests
+                        </a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

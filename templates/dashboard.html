@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard</h1>
+    <div class="text-end">
+        <p class="mb-0">Welcome back, <strong>{{ current_user.username }}</strong></p>
+        <small class="text-muted">
+            Subscription: 
+            {% if current_user.has_active_subscription() %}
+                <span class="badge bg-success">{{ current_user.subscription_type.title() }}</span>
+            {% else %}
+                <span class="badge bg-warning">None</span>
+            {% endif %}
+        </small>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Quick Stats -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-primary mb-3"></i>
+                <h4 class="card-title">{{ vocab_learned }}</h4>
+                <p class="card-text text-muted">Words Learned</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-2x text-success mb-3"></i>
+                <h4 class="card-title">{{ all_test_count if all_test_count is defined else recent_tests|length }}</h4>
+                <p class="card-text text-muted">Tests Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x text-info mb-3"></i>
+                <h4 class="card-title">
+                    {% if recent_tests %}
+                        {{ "%.1f"|format((recent_tests|map(attribute='score_percentage')|map('float')|sum / recent_tests|length)|float) }}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </h4>
+                <p class="card-text text-muted">Average Score</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="mb-4">Quick Actions</h3>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <a href="{{ url_for('practice_tests') }}" class="card border-0 shadow-sm text-decoration-none h-100 hover-lift">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
+                <h5 class="card-title text-dark">Practice Tests</h5>
+                <p class="card-text small text-muted">Take a practice test</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <a href="{{ url_for('vocabulary') }}" class="card border-0 shadow-sm text-decoration-none h-100 hover-lift">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x text-success mb-2"></i>
+                <h5 class="card-title text-dark">Vocabulary</h5>
+                <p class="card-text small text-muted">Learn medical terms</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <a href="{{ url_for('progress') }}" class="card border-0 shadow-sm text-decoration-none h-100 hover-lift">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                <h5 class="card-title text-dark">Progress</h5>
+                <p class="card-text small text-muted">View your progress</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <a href="{{ url_for('subscription') }}" class="card border-0 shadow-sm text-decoration-none h-100 hover-lift">
+            <div class="card-body text-center">
+                <i class="fas fa-star fa-2x text-warning mb-2"></i>
+                <h5 class="card-title text-dark">Subscription</h5>
+                <p class="card-text small text-muted">Manage subscription</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Test Results -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-header border-0 bg-transparent">
+                <h6 class="mb-0"><i class="fas fa-chart-line text-info me-2"></i>Recent Test Results</h6>
+            </div>
+            <div class="card-body">
+                {% if recent_tests %}
+                    {% for result in recent_tests %}
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <h6 class="mb-1">
+                                {% if result.practice_test and result.practice_test.title %}
+                                    {{ result.practice_test.title }}
+                                {% elif result.test_title %}
+                                    {{ result.test_title }}
+                                {% else %}
+                                    Test {{ result.test_id }}
+                                {% endif %}
+                                {% if result.is_mock %}
+                                    <span class="badge bg-info ms-2">Mock</span>
+                                {% endif %}
+                            </h6>
+                            <small class="text-muted">
+                                {{ result.completed_at }} • 
+                                {% if result.practice_test and result.practice_test.section %}
+                                    {{ result.practice_test.section.name if result.practice_test.section.name else result.practice_test.section }}
+                                {% elif result.test_section %}
+                                    {{ result.test_section }}
+                                {% else %}
+                                    General
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge {% if result.score_percentage|float >= 70 %}bg-success{% elif result.score_percentage|float >= 50 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ "%.1f"|format(result.score_percentage|float) }}%
+                            </span>
+                            <div class="small text-muted">
+                                {{ result.time_taken_minutes }} min
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('progress') }}" class="btn btn-outline-primary btn-sm">
+                            View All Results
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No test results yet.</p>
+                        <a href="{{ url_for('practice_tests') }}" class="btn btn-primary btn-sm">Take your first test!</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

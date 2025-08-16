@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "username": "adriatikdamzi",
+    "message": "sadad",
+    "timestamp": "2025-08-14T09:49:29.155923",
+    "is_admin_reply": false,
+    "is_read": true
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "username": "Admin Reply to adriatikdamzi",
+    "message": "asdad",
+    "timestamp": "2025-08-14T09:49:41.971553",
+    "is_admin_reply": true,
+    "is_read": false
+  },
+  {
+    "id": 3,
+    "user_id": 1,
+    "username": "adriatikdamzi",
+    "message": "vx",
+    "timestamp": "2025-08-14T11:59:15.599224",
+    "is_admin_reply": false,
+    "is_read": true
+  }
+]

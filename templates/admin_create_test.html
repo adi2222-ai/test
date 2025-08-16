@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+
+{% block title %}Admin - Create New Test{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus"></i> Create New Test</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Test Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="section" class="form-label">Section *</label>
+                            <select class="form-select" id="section" name="section" required>
+                                <option value="Reading">Reading</option>
+                                <option value="Listening">Listening</option>
+                                <option value="Writing">Writing</option>
+                                <option value="Speaking">Speaking</option>
+                                <option value="All Sections">All Sections</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="duration_minutes" class="form-label">Duration (minutes) *</label>
+                            <input type="number" class="form-control" id="duration_minutes" name="duration_minutes" value="60" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_mock_test" name="is_mock_test" checked>
+                                <label class="form-check-label" for="is_mock_test">
+                                    Mock Test (publicly accessible)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_premium" name="is_premium">
+                                <label class="form-check-label" for="is_premium">
+                                    Premium Test (requires subscription)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin_tests') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Create Test
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

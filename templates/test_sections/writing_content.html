@@ -1,0 +1,284 @@
+<!-- Reading Test Content -->
+<div id="readingContent">
+    {% if test.content.questions %}
+        {% for question in test.content.questions %}
+        <div class="question-container" id="question-{{ question.id }}" style="{% if loop.index > 1 %}display: none;{% endif %}">
+            <!-- Reading Passage -->
+            {% if question.passage %}
+            <div class="reading-passage mb-4">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>Reading Passage</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+                        <div class="passage-text" style="font-size: 1.1em; line-height: 1.6;">
+                            {{ question.passage | safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Sample Reading Passage for demonstration -->
+            {% if not question.passage %}
+              <div class="reading-passage mb-4">
+                <div class="card border-info">
+                  <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-microphone me-2"></i>Speaking Task</h5>
+                  </div>
+                  <div class="card-body" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+                    <div class="passage-text" style="font-size: 1.1em; line-height: 1.6;">
+                      <h6><strong>Speaking Task Instructions</strong></h6>
+                      <p>You will act as a medical professional talking to a patient with a suspected fracture.</p>
+                      <p>Please speak clearly and professionally, explaining the diagnosis and next steps.</p>
+                      <p>You will have up to 2 minutes to record your response.</p>
+                    </div>
+
+                    <div class="recording-controls mt-3" style="text-align:center;">
+                      <button id="record-btn" class="btn btn-primary">Start Recording</button>
+                      <button id="stop-btn" class="btn btn-danger" disabled>Stop Recording</button>
+                      <p id="recording-status" style="margin-top:10px; font-weight:bold; color:#007bff;"></p>
+                    </div>
+
+                    <div id="audio-playback" class="mt-3" style="text-align:center; display:none;">
+                      <h6>Playback your recording:</h6>
+                      <audio id="audio" controls></audio>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <script>
+                const recordBtn = document.getElementById('record-btn');
+                const stopBtn = document.getElementById('stop-btn');
+                const recordingStatus = document.getElementById('recording-status');
+                const audioPlayback = document.getElementById('audio-playback');
+                const audio = document.getElementById('audio');
+
+                let mediaRecorder;
+                let audioChunks = [];
+
+                recordBtn.onclick = async () => {
+                  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('Your browser does not support audio recording.');
+                    return;
+                  }
+                  try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    recordingStatus.textContent = 'Recording...';
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                      audio.src = URL.createObjectURL(audioBlob);
+                      audioPlayback.style.display = 'block';
+                      recordingStatus.textContent = 'Recording stopped.';
+                      stopBtn.disabled = true;
+                      recordBtn.disabled = false;
+
+                      // Upload the audio blob to server
+                      const formData = new FormData();
+                      formData.append('audio_data', audioBlob, 'recording.webm');
+
+                      try {
+                        const response = await fetch('/upload_audio', {
+                          method: 'POST',
+                          body: formData
+                        });
+                        if (response.ok) {
+                          recordingStatus.textContent = 'Recording saved successfully.';
+                        } else {
+                          recordingStatus.textContent = 'Failed to save recording.';
+                        }
+                      } catch (error) {
+                        recordingStatus.textContent = 'Error uploading recording.';
+                      }
+                    };
+
+                    recordBtn.disabled = true;
+                    stopBtn.disabled = false;
+                  } catch (err) {
+                    alert('Could not start recording: ' + err);
+                  }
+                };
+
+                stopBtn.onclick = () => {
+                  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                  }
+                };
+              </script>
+            {% endif %}
+
+            <!-- Question -->
+            <div class="question-content mb-4">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-question-circle me-2"></i>
+                            Question {{ loop.index }} of {{ test.content.questions|length }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="question-text mb-3">{{ question.question }}</h6>
+                        
+                        {% if question.type == 'multiple_choice' %}
+                            <div class="options">
+                                {% for option in question.options %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" 
+                                           name="question_{{ question.id }}" 
+                                           id="option_{{ question.id }}_{{ loop.index0 }}" 
+                                           value="{{ loop.index0 }}">
+                                    <label class="form-check-label" for="option_{{ question.id }}_{{ loop.index0 }}">
+                                        <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% elif question.type == 'text_input' %}
+                            <div class="mb-3">
+                                <label for="answer_{{ question.id }}" class="form-label">Your Answer:</label>
+                                <input type="text" class="form-control" 
+                                       name="question_{{ question.id }}" 
+                                       id="answer_{{ question.id }}" 
+                                       placeholder="Enter your answer here...">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation for this question -->
+            <div class="question-navigation text-center">
+                {% if loop.index < test.content.questions|length %}
+                <button type="button" class="btn btn-primary" onclick="showQuestion({{ loop.index }})">
+                    Next Question <i class="fas fa-arrow-right ms-1"></i>
+                </button>
+                {% endif %}
+                {% if loop.index == test.content.questions|length %}
+                <button type="button" class="btn btn-success" onclick="showSubmitConfirmation()">
+                    <i class="fas fa-check me-2"></i>Review & Submit
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-exclamation-triangle fa-2x mb-3 text-warning"></i>
+            <h4>No Questions Available</h4>
+            <p class="text-muted">This test does not contain any questions yet.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Writing Test Content -->
+<div class="writing-test">
+    <h3>Writing Section</h3>
+
+    <!-- Case Study -->
+    <div class="case-study mb-4">
+        <h4>Case Study</h4>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Patient:</strong> Mrs. Sarah Johnson, 45 years old</p>
+                <p><strong>Presenting complaint:</strong> Persistent lower back pain for 6 weeks</p>
+                <p><strong>History:</strong> Pain started after lifting heavy boxes at work. Initially mild, now severe and radiating down left leg. Difficulty walking and sleeping.</p>
+                <p><strong>Examination:</strong> Limited range of motion in lumbar spine. Positive straight leg raise test on left side. No neurological deficits.</p>
+                <p><strong>Current treatment:</strong> Paracetamol and ibuprofen - minimal relief</p>
+                <p><strong>Request:</strong> Please assess for possible disc herniation and advise on further management</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Writing Task -->
+    <div class="question-container mb-4">
+        <h5>Task: Write a referral letter to an orthopedic specialist</h5>
+        <p>Include the following points:</p>
+        <ul>
+            <li>Patient details and presenting complaint</li>
+            <li>Relevant history and examination findings</li>
+            <li>Current treatment and response</li>
+            <li>Reason for referral and specific request</li>
+        </ul>
+
+        <div class="mb-3">
+            <label for="writing_answer" class="form-label">Your referral letter:</label>
+            <textarea class="form-control" name="question_writing" id="writing_answer" rows="15" 
+                      placeholder="Write your referral letter here..."></textarea>
+        </div>
+
+        <div class="word-count">
+            <small class="text-muted">Word count: <span id="wordCount">0</span> / 180-200 words recommended</small>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentQuestionIndex = 0;
+const totalQuestions = {{ test.content.questions|length if test.content.questions else 0 }};
+
+function showQuestion(index) {
+    // Hide all questions
+    document.querySelectorAll('.question-container').forEach(container => {
+        container.style.display = 'none';
+    });
+    
+    // Show the selected question
+    const questionContainer = document.getElementById(`question-${index + 1}`);
+    if (questionContainer) {
+        questionContainer.style.display = 'block';
+        currentQuestionIndex = index;
+        updateProgress();
+    }
+}
+
+function updateProgress() {
+    const progressBar = document.getElementById('progressBar');
+    const currentQuestionSpan = document.getElementById('currentQuestion');
+    const totalQuestionsSpan = document.getElementById('totalQuestions');
+    
+    if (progressBar && currentQuestionSpan && totalQuestionsSpan) {
+        const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+        progressBar.style.width = progress + '%';
+        currentQuestionSpan.textContent = currentQuestionIndex + 1;
+        totalQuestionsSpan.textContent = totalQuestions;
+    }
+}
+
+function showSubmitConfirmation() {
+    if (confirm('Are you sure you want to submit your test? You cannot make changes after submission.')) {
+        document.getElementById('testForm').submit();
+    }
+}
+
+// Word count functionality
+document.getElementById('writing_answer').addEventListener('input', function() {
+    const text = this.value.trim();
+    const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+    document.getElementById('wordCount').textContent = wordCount;
+});
+
+// Sample scoring criteria for writing (this would be manually graded in real scenario)
+const writingCriteria = {
+    'content_coverage': 'All required points addressed',
+    'organization': 'Clear structure and logical flow',
+    'language_accuracy': 'Appropriate medical terminology and grammar',
+    'tone': 'Professional and appropriate for referral context'
+};
+
+window.testAnswers = {
+    'question_writing': 'manual_grading_required'
+};
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgress();
+    if (totalQuestions > 0) {
+        showQuestion(0);
+    }
+});
+</script>

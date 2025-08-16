@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-user-shield me-2 text-primary"></i>Super User Dashboard</h1>
+            <p class="text-muted">Manage users, monitor progress, and handle support messages</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white mirror-card">
+                    <div class="card-body text-center">
+                        <h5>Unread Messages</h5>
+                        <h3>{{ unread_messages|length }}</h3>
+                        <p class="mb-0">Support Chat</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5>Practice Tests</h5>
+                        <h3 id="practiceTestCount">-</h3>
+                        <p class="mb-0">Individual Files</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5>Mock Tests</h5>
+                        <h3 id="mockTestCount">-</h3>
+                        <p class="mb-0">Separate Folders</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body text-center">
+                        <h5>Test System</h5>
+                        <h3><i class="fas fa-layer-group"></i></h3>
+                        <p class="mb-0">File-Based Storage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="row mt-4">
+        <!-- Navigation Cards -->
+        <div class="col-md-6 mb-4">
+            <div class="card mirror-card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users me-2"></i>User Management</h5>
+                    <p class="card-text">Search and manage student accounts, view progress and test results.</p>
+                    <a href="{{ url_for('search_users') }}" class="btn btn-primary">Search Users</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card mirror-card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-comments me-2"></i>Support Chat</h5>
+                    <p class="card-text">View and respond to student messages and support requests.</p>
+                    <a href="{{ url_for('admin_chat') }}" class="btn btn-success">
+                        Manage Chat 
+                        {% if unread_messages|length > 0 %}
+                            <span class="badge bg-warning ms-2">{{ unread_messages|length }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin_vocabulary') }}" class="btn btn-outline-info btn-lg w-100">
+                <i class="fas fa-book me-3"></i>
+                <div>
+                    <div class="fw-bold">Vocabulary Management</div>
+                    <small class="text-muted">Add, edit, and manage vocabulary words</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin_jobs') }}" class="btn btn-outline-success btn-lg w-100">
+                <i class="fas fa-briefcase me-3"></i>
+                <div>
+                    <div class="fw-bold">Jobs Management</div>
+                    <small class="text-muted">Post, edit, and manage job listings</small>
+                </div>
+            </a>
+        </div>
+        
+    {% if unread_messages %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Recent Unread Messages</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Message</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in unread_messages[:5] %}
+                        <tr>
+                            <td>{{ message.username }}</td>
+                            <td>{{ message.message[:100] }}{% if message.message|length > 100 %}...{% endif %}</td>
+                            <td>{{ message.timestamp }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_chat') }}" class="btn btn-sm btn-primary">Reply</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

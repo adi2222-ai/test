@@ -1,0 +1,458 @@
+
+[
+  {
+    "id": 1,
+    "title": "Reading Practice Test 1",
+    "section": "Reading",
+    "duration_minutes": 60,
+    "description": "Comprehensive reading test with medical texts and multiple choice questions",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 60,
+          "passages": [
+            {
+              "id": 1,
+              "title": "Medication Guidelines",
+              "content": "When prescribing antibiotics, healthcare professionals must consider several factors. The patient's medical history, current medications, and any known allergies are crucial. Penicillin-based antibiotics are effective against many bacterial infections but should not be prescribed to patients with penicillin allergies. The standard dosage for adults is typically 500mg three times daily, taken with food to reduce stomach irritation. Patients should complete the full course even if symptoms improve early."
+            },
+            {
+              "id": 2,
+              "title": "Patient Discharge Instructions",
+              "content": "Following your surgical procedure, it is important to monitor the surgical site for signs of infection. These include increased redness, swelling, warmth, or discharge. Take your prescribed pain medication as directed, typically every 4-6 hours as needed. Avoid heavy lifting for at least two weeks. Your follow-up appointment is scheduled for April 15, 2024. If you experience severe pain, fever above 38.5°C, or excessive bleeding, contact the emergency department immediately."
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "How often should adults take the standard antibiotic dosage?",
+              "type": "multiple_choice",
+              "options": [
+                "Once daily",
+                "Twice daily", 
+                "Three times daily",
+                "Four times daily"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 2,
+              "question": "What should patients do if they experience fever above 38.5°C after surgery?",
+              "type": "multiple_choice",
+              "options": [
+                "Wait until the follow-up appointment",
+                "Take additional pain medication",
+                "Contact the emergency department",
+                "Apply ice to the surgical site"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 3,
+              "question": "Who should NOT be prescribed penicillin-based antibiotics?",
+              "type": "multiple_choice",
+              "options": [
+                "Elderly patients",
+                "Patients with penicillin allergies",
+                "Children under 12",
+                "Pregnant women"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 4,
+              "question": "How long should patients avoid heavy lifting after surgery?",
+              "type": "multiple_choice",
+              "options": [
+                "One week",
+                "Two weeks",
+                "Three weeks", 
+                "One month"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 5,
+              "question": "When should antibiotics be taken to reduce stomach irritation?",
+              "type": "multiple_choice",
+              "options": [
+                "On an empty stomach",
+                "With food",
+                "Before bedtime",
+                "With milk only"
+              ],
+              "correct_answer": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "title": "Listening Practice Test 1", 
+    "section": "Listening",
+    "duration_minutes": 45,
+    "description": "Healthcare consultation and presentation listening exercises",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "listening": {
+          "duration_minutes": 45,
+          "audio_files": [
+            {
+              "id": 1,
+              "title": "Patient Consultation",
+              "url": "/static/audio/consultation1.mp3",
+              "transcript": "Doctor: Good morning, Mrs. Johnson. What brings you in today? Patient: I've been having severe headaches for the past two weeks. They're getting worse, especially in the mornings. Doctor: Can you rate the pain on a scale of 1 to 10? Patient: It's about an 8 out of 10. Doctor: Are you taking any current medications? Patient: Just my blood pressure medication, Lisinopril. Doctor: I'm going to prescribe Sumatriptan for the headaches. Take one tablet when you feel a headache coming on."
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "How long has the patient been experiencing headaches?",
+              "type": "multiple_choice",
+              "options": [
+                "One week",
+                "Two weeks",
+                "Three weeks",
+                "One month"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "What is the patient's pain level on a scale of 1-10?",
+              "type": "multiple_choice",
+              "options": [
+                "6 out of 10",
+                "7 out of 10",
+                "8 out of 10",
+                "9 out of 10"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 3,
+              "question": "What medication is the patient currently taking?",
+              "type": "multiple_choice",
+              "options": [
+                "Lisinopril",
+                "Sumatriptan",
+                "Ibuprofen",
+                "Paracetamol"
+              ],
+              "correct_answer": 0
+            },
+            {
+              "id": 4,
+              "question": "What medication did the doctor prescribe for the headaches?",
+              "type": "multiple_choice",
+              "options": [
+                "Lisinopril",
+                "Sumatriptan", 
+                "Aspirin",
+                "Codeine"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 5,
+              "question": "When are the headaches typically worse?",
+              "type": "multiple_choice",
+              "options": [
+                "In the mornings",
+                "In the afternoons",
+                "In the evenings",
+                "At night"
+              ],
+              "correct_answer": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 3,
+    "title": "Writing Practice Test 1",
+    "section": "Writing", 
+    "duration_minutes": 45,
+    "description": "Medical referral letter writing task",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "patient_name": "Robert Chen",
+            "age": "54",
+            "presenting_complaint": "Chronic lower back pain radiating to left leg for 6 months",
+            "examination_findings": "Limited range of motion, positive straight leg raise test, tenderness L4-L5 region",
+            "current_medication": "Ibuprofen 400mg TDS, Paracetamol 1g QDS PRN",
+            "referral_to": "Orthopedic Surgery",
+            "urgency": "Routine",
+            "task_instructions": "Write a referral letter to the orthopedic surgeon based on the case notes above. Include all relevant clinical information and specify what you are requesting from the specialist."
+          },
+          "questions": [
+            {
+              "id": 1,
+              "question": "Write a complete referral letter",
+              "type": "essay",
+              "correct_answer": "Referral letter should include patient demographics, presenting complaint, examination findings, current treatment, and clear request for specialist opinion"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 4,
+    "title": "Speaking Practice Test 1",
+    "section": "Speaking",
+    "duration_minutes": 20,
+    "description": "Healthcare role-play scenarios for communication practice",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "speaking": {
+          "duration_minutes": 20,
+          "role_plays": [
+            {
+              "id": 1,
+              "setting": "General Practice Clinic",
+              "your_role": "General Practitioner",
+              "patient": "Sarah Williams, 28, concerned about persistent cough for 3 weeks",
+              "task": "Take a detailed history, provide reassurance, and explain next steps",
+              "time_limit": 5
+            },
+            {
+              "id": 2,
+              "setting": "Hospital Ward",
+              "your_role": "Staff Nurse", 
+              "patient": "Mr. Thompson, 65, post-operative day 1 after hip replacement",
+              "task": "Explain post-operative care plan and pain management options",
+              "time_limit": 5
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "Record your role-play response for scenario 1",
+              "type": "speaking",
+              "correct_answer": "Communication assessment based on clarity, empathy, and clinical appropriateness"
+            },
+            {
+              "id": 2,
+              "question": "Record your role-play response for scenario 2", 
+              "type": "speaking",
+              "correct_answer": "Communication assessment based on clarity, empathy, and clinical appropriateness"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 5,
+    "title": "Reading Practice Test 2",
+    "section": "Reading",
+    "duration_minutes": 60,
+    "description": "Advanced reading comprehension with clinical scenarios",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "reading": {
+          "duration_minutes": 60,
+          "passages": [
+            {
+              "id": 1,
+              "title": "Clinical Research Study",
+              "content": "A recent randomized controlled trial examined the effectiveness of a new diabetes management program. The study included 500 participants with Type 2 diabetes over 12 months. Participants were randomly assigned to either the intervention group (new program) or control group (standard care). The intervention group showed a 1.2% reduction in HbA1c levels compared to 0.3% in the control group. Additionally, 78% of intervention participants achieved target glucose levels versus 45% in the control group. The program included weekly educational sessions, peer support groups, and mobile app monitoring."
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "How many participants were included in the study?",
+              "type": "multiple_choice",
+              "options": [
+                "400",
+                "500",
+                "600",
+                "700"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "What was the HbA1c reduction in the intervention group?",
+              "type": "multiple_choice",
+              "options": [
+                "0.3%",
+                "1.2%",
+                "1.5%",
+                "2.0%"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 3,
+              "question": "What percentage of intervention participants achieved target glucose levels?",
+              "type": "multiple_choice",
+              "options": [
+                "45%",
+                "65%",
+                "78%",
+                "85%"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 6,
+    "title": "Listening Practice Test 2",
+    "section": "Listening",
+    "duration_minutes": 45,
+    "description": "Medical conference and patient consultation listening practice",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "listening": {
+          "duration_minutes": 45,
+          "audio_files": [
+            {
+              "id": 1,
+              "title": "Medication Review",
+              "url": "/static/audio/medication_review.mp3",
+              "transcript": "Pharmacist: Good afternoon, Mr. Davies. I'm reviewing your medications today. You're currently on three medications: Metformin 500mg twice daily for diabetes, Lisinopril 10mg once daily for blood pressure, and Atorvastatin 20mg at bedtime for cholesterol. Have you experienced any side effects? Patient: The Metformin sometimes upsets my stomach. Pharmacist: That's common. Try taking it with meals. Your blood pressure is well controlled, and your recent cholesterol levels look good. Continue all medications as prescribed."
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "How often should Metformin be taken?",
+              "type": "multiple_choice",
+              "options": [
+                "Once daily",
+                "Twice daily",
+                "Three times daily",
+                "At bedtime only"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "What side effect is the patient experiencing?",
+              "type": "multiple_choice",
+              "options": [
+                "Headache",
+                "Stomach upset",
+                "Dizziness",
+                "Fatigue"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 3,
+              "question": "When should Atorvastatin be taken?",
+              "type": "multiple_choice",
+              "options": [
+                "In the morning",
+                "With lunch",
+                "At bedtime",
+                "With breakfast"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 7,
+    "title": "Writing Practice Test 2",
+    "section": "Writing",
+    "duration_minutes": 45,
+    "description": "Discharge summary writing practice",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "writing": {
+          "duration_minutes": 45,
+          "scenario": {
+            "patient_name": "Emma Thompson",
+            "age": "32",
+            "presenting_complaint": "Acute appendicitis requiring emergency appendectomy",
+            "examination_findings": "Post-operative recovery progressing well, wound healing satisfactorily, vital signs stable",
+            "current_medication": "Paracetamol 1g QDS, Ibuprofen 400mg TDS",
+            "referral_to": "GP for follow-up",
+            "urgency": "Routine",
+            "task_instructions": "Write a discharge summary for the GP including admission details, treatment provided, current condition, and follow-up requirements."
+          },
+          "questions": [
+            {
+              "id": 1,
+              "question": "Write a complete discharge summary",
+              "type": "essay",
+              "correct_answer": "Discharge summary should include admission reason, treatment details, current status, medications, and follow-up plan"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": 8,
+    "title": "Speaking Practice Test 2",
+    "section": "Speaking",
+    "duration_minutes": 20,
+    "description": "Advanced healthcare communication scenarios",
+    "is_premium": false,
+    "content": {
+      "sections": {
+        "speaking": {
+          "duration_minutes": 20,
+          "role_plays": [
+            {
+              "id": 1,
+              "setting": "Outpatient Clinic",
+              "your_role": "Specialist Nurse",
+              "patient": "Mrs. Carter, 55, newly diagnosed with diabetes, anxious about lifestyle changes",
+              "task": "Provide education about diabetes management and address patient concerns",
+              "time_limit": 5
+            },
+            {
+              "id": 2,
+              "setting": "Emergency Department",
+              "your_role": "Triage Nurse",
+              "patient": "Mr. Wilson, 40, chest pain, worried about heart attack",
+              "task": "Assess symptoms, provide reassurance, and explain triage process",
+              "time_limit": 5
+            }
+          ],
+          "questions": [
+            {
+              "id": 1,
+              "question": "Record your diabetes education role-play",
+              "type": "speaking",
+              "correct_answer": "Assessment based on educational clarity, empathy, and professional communication"
+            },
+            {
+              "id": 2,
+              "question": "Record your triage assessment role-play",
+              "type": "speaking",
+              "correct_answer": "Assessment based on clinical assessment skills and patient reassurance"
+            }
+          ]
+        }
+      }
+    }
+  }
+]

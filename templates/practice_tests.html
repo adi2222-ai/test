@@ -1,0 +1,364 @@
+
+{% extends "base.html" %}
+
+{% block title %}Practice Tests - OET Preparation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
+            <h2><i class="fas fa-dumbbell me-2"></i>Practice Tests</h2>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('mock_tests') }}" class="btn btn-outline-success">
+                    <i class="fas fa-clipboard-list me-2"></i>Mock Tests
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mock Tests Section -->
+{% if mock_tests %}
+<div class="row mb-5">
+    <div class="col-12">
+        <h3 class="mb-3"><i class="fas fa-star me-2 text-warning"></i>Full Mock Tests</h3>
+        <div class="row g-3 g-md-4">
+            {% for test in mock_tests %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm glass-card hover-lift">
+                    <div class="card-header bg-gradient-success text-white">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap">
+                            <h6 class="mb-0 flex-grow-1">{{ test.title }}</h6>
+                            <span class="badge bg-light text-dark ms-2">Free</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <p class="text-muted mb-3 small">{{ test.description }}</p>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <small>{{ test.duration_minutes }} min</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-layers text-info me-2"></i>
+                                    <small>All sections</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-success btn-sm">
+                                <i class="fas fa-play me-2"></i>Start Mock Test
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Section Practice Tests -->
+<div class="row">
+    <div class="col-12">
+        <h3 class="mb-4"><i class="fas fa-list me-2 text-primary"></i>Practice Tests by Section</h3>
+        
+        <!-- Reading Tests -->
+        <div class="mb-4">
+            <h4 class="mb-3 text-primary"><i class="fas fa-book-open me-2"></i>Reading Tests</h4>
+            <div class="row g-3">
+                {% set reading_tests = tests|selectattr("section", "equalto", "Reading")|list %}
+                {% if reading_tests %}
+                    {% for test in reading_tests %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm glass-card hover-lift">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 flex-grow-1">{{ test.title }}</h6>
+                                    {% if test.get('is_premium', False) %}
+                                        <span class="badge bg-warning text-dark ms-2">Premium</span>
+                                    {% else %}
+                                        <span class="badge bg-success ms-2">Free</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted mb-3 small">{{ test.description }}</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <small>{{ test.duration_minutes }} min</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-question-circle text-info me-2"></i>
+                                            <small>Multiple questions</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {% if test.get('is_premium', False) and not current_user.has_active_subscription() %}
+                                        <a href="{{ url_for('subscription') }}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-lock me-2"></i>Premium Only
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-play me-2"></i>Start Test
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm glass-card">
+                            <div class="card-body text-center py-4">
+                                <i class="fas fa-book-open fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No reading tests available</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Listening Tests -->
+        <div class="mb-4">
+            <h4 class="mb-3 text-success"><i class="fas fa-headphones me-2"></i>Listening Tests</h4>
+            <div class="row g-3">
+                {% set listening_tests = tests|selectattr("section", "equalto", "Listening")|list %}
+                {% if listening_tests %}
+                    {% for test in listening_tests %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm glass-card hover-lift">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 flex-grow-1">{{ test.title }}</h6>
+                                    {% if test.get('is_premium', False) %}
+                                        <span class="badge bg-warning text-dark ms-2">Premium</span>
+                                    {% else %}
+                                        <span class="badge bg-success ms-2">Free</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted mb-3 small">{{ test.description }}</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <small>{{ test.duration_minutes }} min</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-question-circle text-info me-2"></i>
+                                            <small>Multiple questions</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {% if test.get('is_premium', False) and not current_user.has_active_subscription() %}
+                                        <a href="{{ url_for('subscription') }}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-lock me-2"></i>Premium Only
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-play me-2"></i>Start Test
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm glass-card">
+                            <div class="card-body text-center py-4">
+                                <i class="fas fa-headphones fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No listening tests available</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Writing Tests -->
+        <div class="mb-4">
+            <h4 class="mb-3 text-warning"><i class="fas fa-pen me-2"></i>Writing Tests</h4>
+            <div class="row g-3">
+                {% set writing_tests = tests|selectattr("section", "equalto", "Writing")|list %}
+                {% if writing_tests %}
+                    {% for test in writing_tests %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm glass-card hover-lift">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 flex-grow-1">{{ test.title }}</h6>
+                                    {% if test.get('is_premium', False) %}
+                                        <span class="badge bg-warning text-dark ms-2">Premium</span>
+                                    {% else %}
+                                        <span class="badge bg-success ms-2">Free</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted mb-3 small">{{ test.description }}</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <small>{{ test.duration_minutes }} min</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-question-circle text-info me-2"></i>
+                                            <small>Essay task</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {% if test.get('is_premium', False) and not current_user.has_active_subscription() %}
+                                        <a href="{{ url_for('subscription') }}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-lock me-2"></i>Premium Only
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-play me-2"></i>Start Test
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm glass-card">
+                            <div class="card-body text-center py-4">
+                                <i class="fas fa-pen fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No writing tests available</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Speaking Tests -->
+        <div class="mb-4">
+            <h4 class="mb-3 text-danger"><i class="fas fa-microphone me-2"></i>Speaking Tests</h4>
+            <div class="row g-3">
+                {% set speaking_tests = tests|selectattr("section", "equalto", "Speaking")|list %}
+                {% if speaking_tests %}
+                    {% for test in speaking_tests %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm glass-card hover-lift">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0 flex-grow-1">{{ test.title }}</h6>
+                                    {% if test.get('is_premium', False) %}
+                                        <span class="badge bg-warning text-dark ms-2">Premium</span>
+                                    {% else %}
+                                        <span class="badge bg-success ms-2">Free</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted mb-3 small">{{ test.description }}</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <small>{{ test.duration_minutes }} min</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-question-circle text-info me-2"></i>
+                                            <small>Role plays</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {% if test.get('is_premium', False) and not current_user.has_active_subscription() %}
+                                        <a href="{{ url_for('subscription') }}" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-lock me-2"></i>Premium Only
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-play me-2"></i>Start Test
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm glass-card">
+                            <div class="card-body text-center py-4">
+                                <i class="fas fa-microphone fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No speaking tests available</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not tests and not mock_tests %}
+<div class="text-center py-5">
+    <div class="card border-0 shadow-sm glass-card">
+        <div class="card-body">
+            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No Practice Tests Available</h4>
+            <p class="text-muted">Check back soon for new practice tests.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Test Tips -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <h4 class="mb-3"><i class="fas fa-lightbulb me-2 text-warning"></i>Test Tips</h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Read instructions carefully</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Manage your time effectively</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Review your answers</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Practice regularly</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Focus on weak areas</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Take mock tests before the real exam</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

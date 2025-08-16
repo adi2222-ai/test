@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+
+{% block title %}Test System Migration - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-database me-2"></i>Test System Migration</h2>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle me-2"></i>New File-Based Test System</h5>
+                </div>
+                <div class="card-body">
+                    <h6>System Improvements:</h6>
+                    <ul>
+                        <li><strong>Separate Files:</strong> Each test section (Reading, Listening, Writing, Speaking) is stored in its own file</li>
+                        <li><strong>Better Organization:</strong> Tests are organized in individual folders</li>
+                        <li><strong>Independent Editing:</strong> Edit sections without affecting others</li>
+                        <li><strong>Mock Test Folders:</strong> Each mock test gets its own folder with all sections</li>
+                        <li><strong>Scalable Storage:</strong> Better performance with large numbers of tests</li>
+                    </ul>
+
+                    <h6>File Structure:</h6>
+                    <pre class="bg-light p-3"><code>data/
+├── tests/                    # Practice Tests
+│   ├── test_1/
+│   │   ├── metadata.json
+│   │   ├── reading.json
+│   │   ├── listening.json
+│   │   ├── writing.json
+│   │   └── speaking.json
+│   └── test_2/
+│       └── ...
+├── mock_tests/               # Mock Tests
+│   ├── test_100/
+│   │   ├── metadata.json
+│   │   ├── reading.json
+│   │   ├── listening.json
+│   │   ├── writing.json
+│   │   └── speaking.json
+│   └── test_101/
+│       └── ...
+└── backup_YYYYMMDD_HHMMSS/  # Automatic Backups</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-cogs me-2"></i>Migration Tools</h5>
+                </div>
+                <div class="card-body">
+                    <p>The system has been upgraded to use file-based storage. All existing tests have been automatically migrated.</p>
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" onclick="window.location.href='/admin/tests'">
+                            <i class="fas fa-list me-2"></i>View All Tests
+                        </button>
+                        <button class="btn btn-success" onclick="window.location.href='/admin/create-test'">
+                            <i class="fas fa-plus me-2"></i>Create New Test
+                        </button>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Quick Stats:</h6>
+                    <div id="migrationStats">
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                            <span class="ms-2">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function loadMigrationStats() {
+    try {
+        const response = await fetch('/api/test-stats');
+        const stats = await response.json();
+        
+        const statsHtml = `
+            <div class="row g-2">
+                <div class="col-6">
+                    <div class="text-center">
+                        <div class="h5 text-primary">${stats.total_practice_tests}</div>
+                        <small class="text-muted">Practice Tests</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center">
+                        <div class="h5 text-info">${stats.total_mock_tests}</div>
+                        <small class="text-muted">Mock Tests</small>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('migrationStats').innerHTML = statsHtml;
+    } catch (error) {
+        document.getElementById('migrationStats').innerHTML = '<p class="text-danger">Error loading stats</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadMigrationStats);
+</script>
+{% endblock %}

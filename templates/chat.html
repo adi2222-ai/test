@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+
+{% block title %}Support Chat - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1><i class="fas fa-comments me-2"></i>Support Chat</h1>
+    <p class="text-muted">Send a message to get help from our support team</p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Chat Messages</h5>
+                </div>
+                <div class="card-body" style="height: 400px; overflow-y: auto;">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="mb-3 {% if message.is_admin_reply %}text-end{% endif %}">
+                            <div class="d-inline-block p-3 rounded {% if message.is_admin_reply %}bg-primary text-white{% else %}bg-light{% endif %}" 
+                                 style="max-width: 70%;">
+                                <div class="fw-bold small">
+                                    {% if message.is_admin_reply %}
+                                        <i class="fas fa-user-shield me-1"></i>Support Team
+                                    {% else %}
+                                        <i class="fas fa-user me-1"></i>You
+                                    {% endif %}
+                                </div>
+                                <div>{{ message.message }}</div>
+                                <div class="small opacity-75 mt-1">{{ message.timestamp }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No messages yet. Send your first message below!</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <form method="POST" action="{{ url_for('send_message') }}">
+                        <div class="input-group">
+                            <textarea class="form-control" name="message" rows="2" 
+                                      placeholder="Type your message here..." required></textarea>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Support Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Response Time:</strong> Usually within 24 hours</p>
+                    <p><strong>Available:</strong> Monday - Friday, 9 AM - 5 PM</p>
+                    <hr>
+                    <h6>Common Questions:</h6>
+                    <ul class="small">
+                        <li>How to access premium tests</li>
+                        <li>Technical issues</li>
+                        <li>Test scoring questions</li>
+                        <li>Account management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

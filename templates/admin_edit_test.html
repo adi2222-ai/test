@@ -1,0 +1,938 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Test - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-edit me-2"></i>Edit Test: {{ test.title }}</h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Test ID: {{ test.id }} | 
+                        Type: {% if test.test_type == 'mock' %}Mock Test{% else %}Practice Test{% endif %} |
+                        Storage: Individual files per section
+                    </p>
+                </div>
+                <div>
+                    <a href="{{ url_for('take_test', test_id=test.id) }}" class="btn btn-outline-info me-2" target="_blank">
+                        <i class="fas fa-eye me-2"></i>Preview Test
+                    </a>
+                    <a href="{{ url_for('admin_tests') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Tests
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin_save_test', test_id=test.id) }}" id="testForm">
+        <!-- Basic Test Info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Test Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Test Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ test.title }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="section" class="form-label">Section</label>
+                            <select class="form-control" id="section" name="section" required>
+                                <option value="All Sections" {% if test.section == 'All Sections' %}selected{% endif %}>All Sections</option>
+                                <option value="Listening" {% if test.section == 'Listening' %}selected{% endif %}>Listening</option>
+                                <option value="Reading" {% if test.section == 'Reading' %}selected{% endif %}>Reading</option>
+                                <option value="Writing" {% if test.section == 'Writing' %}selected{% endif %}>Writing</option>
+                                <option value="Speaking" {% if test.section == 'Speaking' %}selected{% endif %}>Speaking</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                            <input type="number" class="form-control" id="duration_minutes" name="duration_minutes" value="{{ test.duration_minutes }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="2">{{ test.description }}</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_mock_test" name="is_mock_test" {% if test.get('is_mock_test') %}checked{% endif %}>
+                            <label class="form-check-label" for="is_mock_test">
+                                Mock Test (publicly accessible)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_premium" name="is_premium" {% if test.get('is_premium') %}checked{% endif %}>
+                            <label class="form-check-label" for="is_premium">
+                                Premium Test (requires subscription)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Content Sections -->
+        {% set sections = test.content.sections if test.content and test.content.sections else {} %}
+
+        <!-- Reading Section -->
+        <div class="card mb-4" id="readingSection">
+            <div class="card-header">
+                <h5><i class="fas fa-book-open me-2"></i>Reading Section</h5>
+            </div>
+            <div class="card-body">
+                {% set reading = sections.get('reading', {}) %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="reading_duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" name="reading_duration" value="{{ reading.get('duration_minutes', 45) }}">
+                    </div>
+                </div>
+
+                <!-- Reading Passages -->
+                <h6>Reading Passages</h6>
+                <div id="readingPassages">
+                    {% for passage in reading.get('passages', []) %}
+                    <div class="passage-item card border-secondary mb-3">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Passage {{ loop.index }}</span>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removePassage(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Passage Title</label>
+                                <input type="text" class="form-control" name="reading_passage_{{ loop.index0 }}_title" value="{{ passage.get('title', '') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Passage Content</label>
+                                <textarea class="form-control" name="reading_passage_{{ loop.index0 }}_content" rows="8">{{ passage.get('content', '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-success mb-3" onclick="addReadingPassage()">
+                    <i class="fas fa-plus me-2"></i>Add Reading Passage
+                </button>
+
+                <!-- Reading Questions -->
+                <h6>Reading Questions</h6>
+                <div id="readingQuestions">
+                    {% for question in reading.get('questions', []) %}
+                    <div class="question-item card border-info mb-3">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Question {{ loop.index }}</span>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeQuestion(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Question Text</label>
+                                <textarea class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_text" rows="2">{{ question.get('question', '') }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Question Type</label>
+                                <select class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_type" onchange="toggleQuestionOptions(this)">
+                                    <option value="multiple_choice" {% if question.get('type') == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
+                                    <option value="text_input" {% if question.get('type') == 'text_input' %}selected{% endif %}>Text Input</option>
+                                    <option value="essay" {% if question.get('type') == 'essay' %}selected{% endif %}>Essay</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 multiple-choice-options" style="{% if question.get('type') != 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Answer Options</label>
+                                <div class="options-container">
+                                    {% if question.get('options') %}
+                                        {% for option in question.options %}
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option {{ loop.index }}</span>
+                                            <input type="text" class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_option_{{ loop.index0 }}" value="{{ option }}" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option 1</span>
+                                            <input type="text" class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_option_0" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option 2</span>
+                                            <input type="text" class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_option_1" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addOption(this)">
+                                    <i class="fas fa-plus"></i> Add Option
+                                </button>
+                            </div>
+                            <div class="mb-3 multiple-choice-correct" style="{% if question.get('type') != 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Correct Answer</label>
+                                <select class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_correct">
+                                    {% if question.get('options') %}
+                                        {% for option in question.options %}
+                                        <option value="{{ loop.index0 }}" {% if question.get('correct_answer') == loop.index0 %}selected{% endif %}>Option {{ loop.index }}: {{ option[:50] }}{% if option|length > 50 %}...{% endif %}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="0" {% if question.get('correct_answer') == 0 %}selected{% endif %}>Option 1</option>
+                                        <option value="1" {% if question.get('correct_answer') == 1 %}selected{% endif %}>Option 2</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="mb-3 text-answer" style="{% if question.get('type') == 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Correct Answer/Sample Answer</label>
+                                <textarea class="form-control" name="reading_question_{{ question.get('id', loop.index) }}_text_correct" rows="3">{% if question.get('type') != 'multiple_choice' %}{{ question.get('correct_answer', '') }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-success" onclick="addReadingQuestion()">
+                    <i class="fas fa-plus me-2"></i>Add Reading Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Listening Section -->
+        <div class="card mb-4" id="listeningSection">
+            <div class="card-header">
+                <h5><i class="fas fa-headphones me-2"></i>Listening Section</h5>
+            </div>
+            <div class="card-body">
+                {% set listening = sections.get('listening', {}) %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="listening_duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" name="listening_duration" value="{{ listening.get('duration_minutes', 30) }}">
+                    </div>
+                </div>
+
+                <!-- Listening Audio Files -->
+                <h6>Audio Files</h6>
+                <div id="listeningAudio">
+                    {% for audio in listening.get('audio_files', []) %}
+                    <div class="audio-item card border-secondary mb-3">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Audio Title</label>
+                                <input type="text" class="form-control" name="listening_audio_{{ loop.index0 }}_title" value="{{ audio.get('title', '') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Audio URL/Path</label>
+                                <input type="text" class="form-control" name="listening_audio_{{ loop.index0 }}_url" value="{{ audio.get('url', '') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Transcript (optional)</label>
+                                <textarea class="form-control" name="listening_audio_{{ loop.index0 }}_transcript" rows="4">{{ audio.get('transcript', '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-success mb-3" onclick="addListeningAudio()">
+                    <i class="fas fa-plus me-2"></i>Add Audio File
+                </button>
+
+                <!-- Listening Questions -->
+                <h6>Listening Questions</h6>
+                <div id="listeningQuestions">
+                    {% for question in listening.get('questions', []) %}
+                    <div class="question-item card border-info mb-3">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Question {{ loop.index }}</span>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeQuestion(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Question Text</label>
+                                <textarea class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_text" rows="2">{{ question.get('question', '') }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Question Type</label>
+                                <select class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_type" onchange="toggleQuestionOptions(this)">
+                                    <option value="multiple_choice" {% if question.get('type') == 'multiple_choice' %}selected{% endif %}>Multiple Choice</option>
+                                    <option value="text_input" {% if question.get('type') == 'text_input' %}selected{% endif %}>Text Input</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 multiple-choice-options" style="{% if question.get('type') != 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Answer Options</label>
+                                <div class="options-container">
+                                    {% if question.get('options') %}
+                                        {% for option in question.options %}
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option {{ loop.index }}</span>
+                                            <input type="text" class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_option_{{ loop.index0 }}" value="{{ option }}" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option 1</span>
+                                            <input type="text" class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_option_0" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group mb-2 option-input">
+                                            <span class="input-group-text">Option 2</span>
+                                            <input type="text" class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_option_1" placeholder="Enter option text">
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addOption(this)">
+                                    <i class="fas fa-plus"></i> Add Option
+                                </button>
+                            </div>
+                            <div class="mb-3 multiple-choice-correct" style="{% if question.get('type') != 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Correct Answer</label>
+                                <select class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_correct">
+                                    {% if question.get('options') %}
+                                        {% for option in question.options %}
+                                        <option value="{{ loop.index0 }}" {% if question.get('correct_answer') == loop.index0 %}selected{% endif %}>Option {{ loop.index }}: {{ option[:50] }}{% if option|length > 50 %}...{% endif %}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="0" {% if question.get('correct_answer') == 0 %}selected{% endif %}>Option 1</option>
+                                        <option value="1" {% if question.get('correct_answer') == 1 %}selected{% endif %}>Option 2</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="mb-3 text-answer" style="{% if question.get('type') == 'multiple_choice' %}display: none;{% endif %}">
+                                <label class="form-label">Correct Answer</label>
+                                <textarea class="form-control" name="listening_question_{{ question.get('id', loop.index) }}_text_correct" rows="3">{% if question.get('type') != 'multiple_choice' %}{{ question.get('correct_answer', '') }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-success" onclick="addListeningQuestion()">
+                    <i class="fas fa-plus me-2"></i>Add Listening Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Writing Section -->
+        <div class="card mb-4" id="writingSection">
+            <div class="card-header">
+                <h5><i class="fas fa-pen me-2"></i>Writing Section</h5>
+            </div>
+            <div class="card-body">
+                {% set writing = sections.get('writing', {}) %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="writing_duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" name="writing_duration" value="{{ writing.get('duration_minutes', 45) }}">
+                    </div>
+                </div>
+
+                <!-- Writing Scenario -->
+                <h6>Writing Scenario</h6>
+                {% set scenario = writing.get('scenario', {}) %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" class="form-control" name="writing_patient_name" value="{{ scenario.get('patient_name', '') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Age</label>
+                            <input type="text" class="form-control" name="writing_age" value="{{ scenario.get('age', '') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Presenting Complaint</label>
+                    <textarea class="form-control" name="writing_presenting_complaint" rows="3">{{ scenario.get('presenting_complaint', '') }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Examination Findings</label>
+                    <textarea class="form-control" name="writing_examination_findings" rows="3">{{ scenario.get('examination_findings', '') }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Referral To</label>
+                    <input type="text" class="form-control" name="writing_referral_to" value="{{ scenario.get('referral_to', '') }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Writing Task Instructions</label>
+                    <textarea class="form-control" name="writing_task_instructions" rows="4">{{ scenario.get('task_instructions', 'Write a referral letter based on the case notes above.') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speaking Section -->
+        <div class="card mb-4" id="speakingSection">
+            <div class="card-header">
+                <h5><i class="fas fa-microphone me-2"></i>Speaking Section</h5>
+            </div>
+            <div class="card-body">
+                {% set speaking = sections.get('speaking', {}) %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="speaking_duration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" name="speaking_duration" value="{{ speaking.get('duration_minutes', 20) }}">
+                    </div>
+                </div>
+
+                <!-- Role Plays -->
+                <h6>Role Play Scenarios</h6>
+                <div id="speakingRolePlays">
+                    {% for roleplay in speaking.get('role_plays', []) %}
+                    <div class="roleplay-item card border-secondary mb-3">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Role Play {{ loop.index }}</span>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeRolePlay(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Setting</label>
+                                        <input type="text" class="form-control" name="speaking_roleplay_{{ loop.index0 }}_setting" value="{{ roleplay.get('setting', '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Your Role</label>
+                                        <input type="text" class="form-control" name="speaking_roleplay_{{ loop.index0 }}_your_role" value="{{ roleplay.get('your_role', '') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Patient/Client</label>
+                                <input type="text" class="form-control" name="speaking_roleplay_{{ loop.index0 }}_patient" value="{{ roleplay.get('patient', '') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Task</label>
+                                <textarea class="form-control" name="speaking_roleplay_{{ loop.index0 }}_task" rows="3">{{ roleplay.get('task', '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-success" onclick="addSpeakingRolePlay()">
+                    <i class="fas fa-plus me-2"></i>Add Role Play
+                </button>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="card">
+            <div class="card-body text-center">
+                <button type="submit" class="btn btn-lg btn-success">
+                    <i class="fas fa-save me-2"></i>Save Test Changes
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+// Enhanced test editor with dynamic content management
+let unsavedChanges = false;
+let autoSaveInterval;
+let passageCounter = 1000;
+let questionCounter = 1000;
+let roleplayCounter = 1000;
+let audioCounter = 1000;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Track changes
+    const form = document.getElementById('testForm');
+    if (form) {
+        form.addEventListener('input', function() {
+            unsavedChanges = true;
+        });
+
+        // Auto-save every 30 seconds
+        autoSaveInterval = setInterval(autoSave, 30000);
+    }
+
+    // Warn before leaving with unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if (unsavedChanges) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Initialize counters based on existing content
+    initializeCounters();
+
+    // Initialize question type toggles for existing questions
+    document.querySelectorAll('.question-item').forEach(questionItem => {
+        const select = questionItem.querySelector('select[name*="_type"]');
+        if (select) {
+            toggleQuestionOptions(select);
+        }
+    });
+});
+
+function initializeCounters() {
+    // Find highest existing IDs to avoid conflicts
+    document.querySelectorAll('[data-passage-id]').forEach(el => {
+        const id = parseInt(el.getAttribute('data-passage-id'));
+        if (id >= passageCounter) passageCounter = id + 1;
+    });
+
+    document.querySelectorAll('[data-question-id]').forEach(el => {
+        const id = parseInt(el.getAttribute('data-question-id'));
+        if (id >= questionCounter) questionCounter = id + 1;
+    });
+
+    document.querySelectorAll('[data-roleplay-id]').forEach(el => {
+        const id = parseInt(el.getAttribute('data-roleplay-id'));
+        if (id >= roleplayCounter) roleplayCounter = id + 1;
+    });
+
+    document.querySelectorAll('[data-audio-id]').forEach(el => {
+        const id = parseInt(el.getAttribute('data-audio-id'));
+        if (id >= audioCounter) audioCounter = id + 1;
+    });
+}
+
+function removePassage(button) {
+    const element = button.closest('.passage-item');
+    if (element && confirm('Are you sure you want to remove this passage?')) {
+        element.remove();
+        unsavedChanges = true;
+    }
+}
+
+function addReadingPassage() {
+    const container = document.getElementById('readingPassages');
+    const passageId = passageCounter++;
+
+    const passageHtml = `
+        <div class="passage-item card border-secondary mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Passage ${passageId}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removePassage(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Passage Title</label>
+                    <input type="text" class="form-control" name="reading_passage_${passageId}_title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Passage Content</label>
+                    <textarea class="form-control" name="reading_passage_${passageId}_content" rows="8"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', passageHtml);
+    unsavedChanges = true;
+}
+
+function removeQuestion(button) {
+    const element = button.closest('.question-item');
+    if (element && confirm('Are you sure you want to remove this question?')) {
+        element.remove();
+        unsavedChanges = true;
+    }
+}
+
+function addReadingQuestion() {
+    const container = document.getElementById('readingQuestions');
+    const questionId = questionCounter++;
+
+    const questionHtml = `
+        <div class="question-item card border-info mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Question ${questionId}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Question Text</label>
+                    <textarea class="form-control" name="reading_question_${questionId}_text" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Question Type</label>
+                    <select class="form-control" name="reading_question_${questionId}_type" onchange="toggleQuestionOptions(this)">
+                        <option value="multiple_choice">Multiple Choice</option>
+                        <option value="text_input">Text Input</option>
+                        <option value="essay">Essay</option>
+                    </select>
+                </div>
+                <div class="mb-3 multiple-choice-options">
+                    <label class="form-label">Answer Options</label>
+                    <div class="options-container">
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 1</span>
+                            <input type="text" class="form-control" name="reading_question_${questionId}_option_0" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 2</span>
+                            <input type="text" class="form-control" name="reading_question_${questionId}_option_1" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addOption(this)">
+                        <i class="fas fa-plus"></i> Add Option
+                    </button>
+                </div>
+                <div class="mb-3 multiple-choice-correct">
+                    <label class="form-label">Correct Answer</label>
+                    <select class="form-control" name="reading_question_${questionId}_correct">
+                        <option value="0">Option 1</option>
+                        <option value="1">Option 2</option>
+                    </select>
+                </div>
+                <div class="mb-3 text-answer" style="display: none;">
+                    <label class="form-label">Correct Answer/Sample Answer</label>
+                    <textarea class="form-control" name="reading_question_${questionId}_text_correct" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', questionHtml);
+    unsavedChanges = true;
+}
+
+function removeAudio(button) {
+    const element = button.closest('.audio-item');
+    if (element && confirm('Are you sure you want to remove this audio file?')) {
+        element.remove();
+        unsavedChanges = true;
+    }
+}
+
+function addListeningAudio() {
+    const container = document.getElementById('listeningAudio');
+    const audioId = audioCounter++;
+
+    const audioHtml = `
+        <div class="audio-item card border-secondary mb-3">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Audio Title</label>
+                    <input type="text" class="form-control" name="listening_audio_${audioId}_title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Audio URL/Path</label>
+                    <input type="text" class="form-control" name="listening_audio_${audioId}_url">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Transcript (optional)</label>
+                    <textarea class="form-control" name="listening_audio_${audioId}_transcript" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', audioHtml);
+    unsavedChanges = true;
+}
+
+function addListeningQuestion() {
+    const container = document.getElementById('listeningQuestions');
+    const questionCount = container.querySelectorAll('.question-item').length + 1;
+    const questionHtml = `
+        <div class="card mb-3 question-item">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Question ${questionCount}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Question Text</label>
+                    <textarea class="form-control" name="listening_question_${questionCount}_text" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Question Type</label>
+                    <select class="form-control" name="listening_question_${questionCount}_type" onchange="toggleQuestionOptions(this)">
+                        <option value="multiple_choice">Multiple Choice</option>
+                        <option value="text_input">Text Input</option>
+                    </select>
+                </div>
+
+                <!-- Multiple Choice Options -->
+                <div class="mb-3 multiple-choice-options">
+                    <label class="form-label">Answer Options</label>
+                    <div class="options-container">
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 1</span>
+                            <input type="text" class="form-control" name="listening_question_${questionCount}_option_0" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 2</span>
+                            <input type="text" class="form-control" name="listening_question_${questionCount}_option_1" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addOption(this)">
+                        <i class="fas fa-plus"></i> Add Option
+                    </button>
+
+                    <div class="mt-3">
+                        <label class="form-label">Correct Answer (Option Number)</label>
+                        <select class="form-control" name="listening_question_${questionCount}_correct">
+                            <option value="0">Option 1</option>
+                            <option value="1">Option 2</option>
+                            <option value="2">Option 3</option>
+                            <option value="3">Option 4</option>
+                            <option value="4">Option 5</option>
+                            <option value="5">Option 6</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text Input Answer -->
+                <div class="mb-3 text-answer" style="display: none;">
+                    <label class="form-label">Correct Answer</label>
+                    <textarea class="form-control" name="listening_question_${questionCount}_text_correct" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', questionHtml);
+}
+
+function addReadingQuestion() {
+    const container = document.getElementById('readingQuestions');
+    const questionCount = container.querySelectorAll('.question-item').length + 1;
+    const questionHtml = `
+        <div class="question-item card mb-3 question-item">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Question ${questionCount}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeQuestion(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Question Text</label>
+                    <textarea class="form-control" name="reading_question_${questionCount}_text" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Question Type</label>
+                    <select class="form-control" name="reading_question_${questionCount}_type" onchange="toggleQuestionOptions(this)">
+                        <option value="multiple_choice">Multiple Choice</option>
+                        <option value="text_input">Text Input</option>
+                        <option value="essay">Essay</option>
+                    </select>
+                </div>
+
+                <!-- Multiple Choice Options -->
+                <div class="mb-3 multiple-choice-options">
+                    <label class="form-label">Answer Options</label>
+                    <div class="options-container">
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 1</span>
+                            <input type="text" class="form-control" name="reading_question_${questionCount}_option_0" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="input-group mb-2 option-input">
+                            <span class="input-group-text">Option 2</span>
+                            <input type="text" class="form-control" name="reading_question_${questionCount}_option_1" placeholder="Enter option text">
+                            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addOption(this)">
+                        <i class="fas fa-plus"></i> Add Option
+                    </button>
+
+                    <div class="mt-3">
+                        <label class="form-label">Correct Answer (Option Number)</label>
+                        <select class="form-control" name="reading_question_${questionCount}_correct">
+                            <option value="0">Option 1</option>
+                            <option value="1">Option 2</option>
+                            <option value="2">Option 3</option>
+                            <option value="3">Option 4</option>
+                            <option value="4">Option 5</option>
+                            <option value="5">Option 6</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text Input/Essay Answer -->
+                <div class="mb-3 text-answer" style="display: none;">
+                    <label class="form-label">Correct Answer/Sample Answer</label>
+                    <textarea class="form-control" name="reading_question_${questionCount}_text_correct" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', questionHtml);
+}
+
+function toggleQuestionOptions(select) {
+    const container = select.closest('.question-item');
+    const mcOptions = container.querySelector('.multiple-choice-options');
+    const mcCorrect = container.querySelector('.multiple-choice-correct');
+    const textAnswer = container.querySelector('.text-answer');
+
+    if (select.value === 'multiple_choice') {
+        if (mcOptions) mcOptions.style.display = 'block';
+        if (mcCorrect) mcCorrect.style.display = 'block';
+        if (textAnswer) textAnswer.style.display = 'none';
+    } else {
+        if (mcOptions) mcOptions.style.display = 'none';
+        if (mcCorrect) mcCorrect.style.display = 'none';
+        if (textAnswer) textAnswer.style.display = 'block';
+    }
+}
+
+function addOption(button) {
+    const container = button.parentElement.querySelector('.options-container');
+    const optionCount = container.querySelectorAll('.option-input').length;
+    const questionElement = button.closest('.question-item');
+    const questionId = questionElement.querySelector('textarea[name*="_text"]').name.match(/question_(\d+)_text/)[1];
+
+    const optionHtml = `
+        <div class="input-group mb-2 option-input">
+            <span class="input-group-text">Option ${optionCount + 1}</span>
+            <input type="text" class="form-control" name="reading_question_${questionId}_option_${optionCount}" placeholder="Enter option text">
+            <button type="button" class="btn btn-outline-danger" onclick="removeOption(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', optionHtml);
+
+    // Update the correct answer dropdown
+    updateCorrectAnswerDropdown(questionElement);
+}
+
+function removeOption(button) {
+    const optionDiv = button.closest('.option-input');
+    const container = optionDiv.parentElement;
+    optionDiv.remove();
+
+    // Re-number options
+    const options = container.querySelectorAll('.option-input');
+    options.forEach((option, index) => {
+        const span = option.querySelector('.input-group-text');
+        const input = option.querySelector('input');
+        span.textContent = `Option ${index + 1}`;
+
+        // Update input name
+        const oldName = input.name;
+        const newName = oldName.replace(/_option_\d+$/, `_option_${index}`);
+        input.name = newName;
+    });
+
+    // Update correct answer dropdown
+    const questionElement = button.closest('.question-item');
+    updateCorrectAnswerDropdown(questionElement);
+}
+
+function updateCorrectAnswerDropdown(questionElement) {
+    const correctSelect = questionElement.querySelector('select[name*="_correct"]');
+    const options = questionElement.querySelectorAll('.option-input input');
+
+    if (correctSelect && options.length > 0) {
+        const currentValue = correctSelect.value;
+        correctSelect.innerHTML = '';
+
+        options.forEach((input, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `Option ${index + 1}: ${input.value.substring(0, 50)}${input.value.length > 50 ? '...' : ''}`;
+            if (index == currentValue) {
+                option.selected = true;
+            }
+            correctSelect.appendChild(option);
+        });
+    }
+}
+
+function removePassage(button) {
+    const passageDiv = button.closest('.passage-item');
+    passageDiv.remove();
+}
+
+function autoSave() {
+    if (unsavedChanges) {
+        console.log('Auto-saving test...');
+        // Auto-save functionality could be implemented here
+    }
+}
+
+function saveTest() {
+    const form = document.getElementById('testForm');
+    if (form) {
+        unsavedChanges = false;
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

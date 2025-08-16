@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Preparation Platform{% endblock %}
+
+{% block content %}
+<div class="test-interface">
+    <!-- Test Header -->
+    <div class="card border-primary mb-4 glass-card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="card-title mb-1">{{ test.title }}</h2>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-tag me-2"></i>{{ test.section }} Section
+                        {% if test.get('is_mock_test', False) %}
+                            <span class="badge bg-primary ms-2">Full Mock Test</span>
+                        {% endif %}
+                        {% if test.get('is_premium', False) %}
+                            <span class="badge bg-warning ms-2">Premium</span>
+                        {% endif %}
+                    </p>
+                    {% if test.description %}
+                        <p class="card-text small">{{ test.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="test-timer">
+                        <i class="fas fa-clock fa-2x text-primary"></i>
+                        <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                        <small class="text-muted">Time Remaining</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Progress -->
+    <div class="card border-0 shadow-sm mb-4 glass-card">
+        <div class="card-body py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Progress:</small>
+                <div class="progress flex-grow-1 mx-3" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <small class="text-muted">
+                    <span id="currentQuestion">1</span> of <span id="totalQuestions">0</span>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Content -->
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <div id="testContent">
+                    {% if test.section == 'Listening' %}
+                        {% include 'test_sections/listening_content.html' %}
+                    {% elif test.section == 'Reading' %}
+                        {% include 'test_sections/reading_content.html' %}
+                    {% elif test.section == 'Writing' %}
+                        {% include 'test_sections/writing_content.html' %}
+                    {% elif test.section == 'Speaking' %}
+                        {% include 'test_sections/speaking_content.html' %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3 text-warning"></i>
+                            <h4>Test Content Loading...</h4>
+                            <p class="text-muted">Preparing your {{ test.section }} test...</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Navigation -->
+        <div class="card border-0 shadow-sm mt-4 glass-card">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="previousQuestion()" disabled>
+                        <i class="fas fa-arrow-left me-2"></i>Previous
+                    </button>
+                    
+                    <div class="d-flex gap-2 flex-wrap" id="questionNavigation">
+                        <!-- Question number buttons will be added here -->
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-warning" id="finishEarlyBtn" onclick="showFinishModal()">
+                            <i class="fas fa-flag me-2"></i>Finish Early
+                        </button>
+                        
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                            Next<i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                        
+                        <button type="submit" class="btn btn-success d-none" id="submitBtn">
+                            <i class="fas fa-check me-2"></i>Submit Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Early Finish Confirmation Modal -->
+<div class="modal fade" id="finishEarlyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Finish Test Early</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Are you sure you want to finish this test early? You cannot make changes after submission.
+                </div>
+                <div id="earlyFinishSummary">
+                    <p><strong>Current Progress:</strong></p>
+                    <ul>
+                        <li>Questions answered: <span id="answeredCount">0</span></li>
+                        <li>Questions remaining: <span id="remainingCount">0</span></li>
+                        <li>Time remaining: <span id="timeRemaining">0</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Test</button>
+                <button type="button" class="btn btn-warning" onclick="finishTestEarly()">
+                    <i class="fas fa-check me-2"></i>Finish Test
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Time Up Modal -->
+<div class="modal fade" id="timeUpModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Time's Up!</h5>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-clock fa-3x text-danger mb-3"></i>
+                <h4>Test time has expired</h4>
+                <p>Your test will be automatically submitted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitTestAutomatically()">
+                    <i class="fas fa-check me-2"></i>Submit Test
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Test data and state
+let testData = null;
+let currentQuestionIndex = 0;
+let answers = {};
+let startTime = Date.now();
+let timerInterval = null;
+let testDurationMinutes = {{ test.duration_minutes }};
+
+// Initialize test
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTest();
+});
+
+function initializeTest() {
+    // Parse test content
+    try {
+        const contentElement = document.querySelector('[data-test-content]');
+        if (contentElement) {
+            testData = JSON.parse(contentElement.textContent);
+        } else {
+            // Generate sample questions based on test section
+            testData = generateSampleQuestions('{{ test.section }}');
+        }
+        
+        loadTest();
+        startTimer(testDurationMinutes);
+    } catch (error) {
+        console.error('Error loading test:', error);
+        testData = generateSampleQuestions('{{ test.section }}');
+        loadTest();
+        startTimer(testDurationMinutes);
+    }
+}
+
+
+function loadTest() {
+    if (testData && testData.questions) {
+        document.getElementById('totalQuestions').textContent = testData.questions.length;
+        createQuestionNavigation();
+        showQuestion(0);
+    }
+}
+
+function createQuestionNavigation() {
+    const nav = document.getElementById('questionNavigation');
+    nav.innerHTML = '';
+    
+    for (let i = 0; i < testData.questions.length; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-sm btn-outline-secondary';
+        btn.textContent = i + 1;
+        btn.type = 'button';
+        btn.onclick = () => showQuestion(i);
+        btn.id = `navBtn${i}`;
+        nav.appendChild(btn);
+    }
+}
+
+function showQuestion(index) {
+    if (!testData || !testData.questions || index >= testData.questions.length) return;
+    
+    currentQuestionIndex = index;
+    const question = testData.questions[index];
+    const content = document.getElementById('testContent');
+    
+    // Update navigation
+    document.getElementById('currentQuestion').textContent = index + 1;
+    updateProgressBar();
+    updateNavigationButtons();
+    updateQuestionNavigation();
+    
+    // Render question
+    let questionHtml = `
+        <div class="question-container">
+            <h4 class="mb-3">Question ${index + 1}</h4>
+            <p class="question-text fs-5">${question.question}</p>
+            <div class="answer-section mt-4">
+    `;
+    
+    if (question.type === 'multiple_choice') {
+        question.options.forEach((option, optionIndex) => {
+            const isChecked = answers[question.id] === optionIndex ? 'checked' : '';
+            questionHtml += `
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="question_${question.id}" 
+                           id="option${optionIndex}" value="${optionIndex}" ${isChecked}
+                           onchange="saveAnswer(${question.id}, ${optionIndex})">
+                    <label class="form-check-label fs-6" for="option${optionIndex}">
+                        ${option}
+                    </label>
+                </div>
+            `;
+        });
+    } else if (question.type === 'text_input') {
+        const currentAnswer = answers[question.id] || '';
+        questionHtml += `
+            <div class="mb-3">
+                <input type="text" class="form-control form-control-lg" name="question_${question.id}" 
+                       value="${currentAnswer}" placeholder="Type your answer here..."
+                       onchange="saveAnswer(${question.id}, this.value)">
+            </div>
+        `;
+    } else if (question.type === 'essay') {
+        const currentAnswer = answers[question.id] || '';
+        questionHtml += `
+            <div class="mb-3">
+                <textarea class="form-control" name="question_${question.id}" rows="10" 
+                          placeholder="Write your response here..." 
+                          onchange="saveAnswer(${question.id}, this.value)">${currentAnswer}</textarea>
+                <small class="text-muted">Recommended: 150-200 words</small>
+            </div>
+        `;
+    } else if (question.type === 'roleplay') {
+        const currentAnswer = answers[question.id] || '';
+        questionHtml += `
+            <div class="alert alert-info">
+                <i class="fas fa-microphone me-2"></i>Speaking assessment - practice your response aloud
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" name="question_${question.id}" rows="5" 
+                          placeholder="Notes for your spoken response..." 
+                          onchange="saveAnswer(${question.id}, this.value)">${currentAnswer}</textarea>
+            </div>
+        `;
+    }
+    
+    questionHtml += `
+            </div>
+        </div>
+    `;
+    
+    content.innerHTML = questionHtml;
+}
+
+function saveAnswer(questionId, answer) {
+    answers[questionId] = answer;
+    updateQuestionNavigation();
+}
+
+function updateProgressBar() {
+    if (!testData || !testData.questions) return;
+    const progress = ((currentQuestionIndex + 1) / testData.questions.length) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+}
+
+function updateNavigationButtons() {
+    if (!testData || !testData.questions) return;
+    
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    prevBtn.disabled = currentQuestionIndex === 0;
+    
+    if (currentQuestionIndex === testData.questions.length - 1) {
+        nextBtn.classList.add('d-none');
+        submitBtn.classList.remove('d-none');
+    } else {
+        nextBtn.classList.remove('d-none');
+        submitBtn.classList.add('d-none');
+    }
+}
+
+function updateQuestionNavigation() {
+    if (!testData || !testData.questions) return;
+    
+    for (let i = 0; i < testData.questions.length; i++) {
+        const btn = document.getElementById(`navBtn${i}`);
+        if (!btn) continue;
+        
+        const questionId = testData.questions[i].id;
+        
+        btn.className = 'btn btn-sm';
+        
+        if (i === currentQuestionIndex) {
+            btn.className += ' btn-primary';
+        } else if (answers.hasOwnProperty(questionId)) {
+            btn.className += ' btn-success';
+        } else {
+            btn.className += ' btn-outline-secondary';
+        }
+    }
+}
+
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        showQuestion(currentQuestionIndex - 1);
+    }
+}
+
+function nextQuestion() {
+    if (testData && testData.questions && currentQuestionIndex < testData.questions.length - 1) {
+        showQuestion(currentQuestionIndex + 1);
+    }
+}
+
+function startTimer(minutes) {
+    let timeLeft = minutes * 60; // Convert to seconds
+    
+    timerInterval = setInterval(() => {
+        const minutesLeft = Math.floor(timeLeft / 60);
+        const secondsLeft = timeLeft % 60;
+        
+        document.getElementById('timer').textContent = 
+            `${minutesLeft}:${secondsLeft.toString().padStart(2, '0')}`;
+        
+        // Change color when time is running low
+        const timerElement = document.getElementById('timer');
+        if (timeLeft <= 300) { // 5 minutes
+            timerElement.className = 'h4 mb-0 text-danger';
+        } else if (timeLeft <= 600) { // 10 minutes
+            timerElement.className = 'h4 mb-0 text-warning';
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpModal();
+        }
+        
+        timeLeft--;
+    }, 1000);
+}
+
+function showFinishModal() {
+    if (!testData || !testData.questions) return;
+    
+    const answeredCount = Object.keys(answers).length;
+    const totalCount = testData.questions.length;
+    const remainingCount = totalCount - answeredCount;
+    const timeRemaining = document.getElementById('timer').textContent;
+    
+    document.getElementById('answeredCount').textContent = answeredCount;
+    document.getElementById('remainingCount').textContent = remainingCount;
+    document.getElementById('timeRemaining').textContent = timeRemaining;
+    
+    const modal = new bootstrap.Modal(document.getElementById('finishEarlyModal'));
+    modal.show();
+}
+
+function finishTestEarly() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('finishEarlyModal'));
+    modal.hide();
+    
+    // Submit the form
+    clearInterval(timerInterval);
+    document.getElementById('testForm').submit();
+}
+
+function showTimeUpModal() {
+    const modal = new bootstrap.Modal(document.getElementById('timeUpModal'));
+    modal.show();
+}
+
+function submitTestAutomatically() {
+    document.getElementById('testForm').submit();
+}
+
+// Prevent accidental page refresh
+window.addEventListener('beforeunload', function(e) {
+    if (timerInterval) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+{% endblock %}

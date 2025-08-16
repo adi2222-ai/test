@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Mock Test{% endblock %}
+
+{% block content %}
+<div class="test-interface">
+    <!-- Test Header -->
+    <div class="card border-success mb-4 glass-card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="card-title mb-1">{{ test.title }}</h2>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-star me-2"></i>{{ test.section }} - Full Mock Test
+                        <span class="badge bg-success ms-2">Mock Exam</span>
+                    </p>
+                    {% if test.description %}
+                        <p class="card-text small">{{ test.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="test-timer">
+                        <i class="fas fa-clock fa-2x text-success"></i>
+                        <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                        <small class="text-muted">Time Remaining</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Content -->
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        <input type="hidden" name="test_id" value="{{ test.id }}">
+        <input type="hidden" name="user_id" value="{{ current_user.id }}">
+
+        <div class="card border-0 shadow-sm glass-card">
+            <div class="card-body">
+                <!-- Progress Indicator -->
+                <div class="progress mb-4" style="height: 8px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" id="sectionProgress">
+                        <span class="sr-only">25% Complete</span>
+                    </div>
+                </div>
+
+                <div id="testContent">
+                    {% set sections = test.content.sections if test.content and test.content.sections else {} %}
+
+                    <!-- Section Navigation -->
+                    <div class="section-navigation mb-4">
+                        <div class="row">
+                            {% if 'listening' in sections %}
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-primary w-100 section-btn active" onclick="showSection('listening')">
+                                    <i class="fas fa-headphones me-2"></i>Listening
+                                </button>
+                            </div>
+                            {% endif %}
+                            {% if 'reading' in sections %}
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-primary w-100 section-btn" onclick="showSection('reading')">
+                                    <i class="fas fa-book me-2"></i>Reading
+                                </button>
+                            </div>
+                            {% endif %}
+                            {% if 'writing' in sections %}
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-primary w-100 section-btn" onclick="showSection('writing')">
+                                    <i class="fas fa-pen me-2"></i>Writing
+                                </button>
+                            </div>
+                            {% endif %}
+                            {% if 'speaking' in sections %}
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-outline-primary w-100 section-btn" onclick="showSection('speaking')">
+                                    <i class="fas fa-microphone me-2"></i>Speaking
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Listening Section -->
+                    {% if 'listening' in sections %}
+                    <div id="listeningSection" class="test-section">
+                        <h3><i class="fas fa-headphones me-2"></i>Listening Section</h3>
+                        {% set listening = sections.listening %}
+
+                        <!-- Audio Files -->
+                        {% if listening.get('audio_files') %}
+                            {% for audio in listening.audio_files %}
+                            <div class="audio-container mb-4">
+                                <h4>{{ audio.get('title', 'Audio Clip') }}</h4>
+                                {% if audio.get('url') %}
+                                <audio controls class="w-100 mb-3">
+                                    <source src="{{ audio.url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- Listening Questions -->
+                        {% if listening.get('questions') %}
+                            {% for question in listening.questions %}
+                            <div class="question-container mb-4">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Question {{ loop.index }} of {{ listening.questions|length }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="question-text mb-3">{{ question.question }}</h6>
+
+                                        {% if question.type == 'multiple_choice' %}
+                                            <div class="options">
+                                                {% for option in question.options %}
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="radio" 
+                                                           name="question_{{ question.get('id', loop.index) }}" 
+                                                           value="{{ loop.index0 }}" 
+                                                           id="lq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                    <label class="form-check-label" for="lq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                        <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                                    </label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <div class="mb-3">
+                                                <label for="lanswer_{{ question.get('id', loop.index) }}" class="form-label">Your Answer:</label>
+                                                <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" 
+                                                          id="lanswer_{{ question.get('id', loop.index) }}" rows="3" 
+                                                          placeholder="Enter your answer here..."></textarea>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Reading Section -->
+                    {% if 'reading' in sections %}
+                    <div id="readingSection" class="test-section" style="display: none;">
+                        <h3><i class="fas fa-book-open me-2"></i>Reading Section</h3>
+                        {% set reading = sections.reading %}
+
+                        <!-- Reading Passages -->
+                        {% if reading.get('passages') %}
+                            {% for passage in reading.passages %}
+                            <div class="passage mb-4">
+                                <h4>{{ passage.get('title', 'Reading Passage') }}</h4>
+                                <div class="card">
+                                    <div class="card-body">
+                                        {{ passage.get('content', '') | safe }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- Questions -->
+                            {% if reading.get('questions') %}
+                                {% for question in reading.questions %}
+                                <div class="question-container mb-4">
+                                    <div class="card border-primary">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="mb-0">Question {{ loop.index }} of {{ reading.questions|length }}</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="question-text mb-3">{{ question.question }}</h6>
+
+                                            {% if question.type == 'multiple_choice' %}
+                                                <div class="options">
+                                                    {% for option in question.options %}
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="radio" 
+                                                               name="question_{{ question.get('id', loop.index) }}" 
+                                                               value="{{ loop.index0 }}" 
+                                                               id="rq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                        <label class="form-check-label" for="rq{{ question.get('id', loop.index) }}_{{ loop.index0 }}">
+                                                            <strong>{{ ['A', 'B', 'C', 'D'][loop.index0] }}.</strong> {{ option }}
+                                                        </label>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="mb-3">
+                                                    <label for="ranswer_{{ question.get('id', loop.index) }}" class="form-label">Your Answer:</label>
+                                                    <textarea class="form-control" name="question_{{ question.get('id', loop.index) }}" 
+                                                              id="ranswer_{{ question.get('id', loop.index) }}" rows="3" 
+                                                              placeholder="Enter your answer here..."></textarea>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Writing Section -->
+                    {% if 'writing' in sections %}
+                    <div id="writingSection" class="test-section" style="display: none;">
+                        <h3><i class="fas fa-pen me-2"></i>Writing Section</h3>
+                        {% set writing = sections.writing %}
+
+                        <!-- Writing Scenario -->
+                        {% if writing.get('scenario') %}
+                        {% set scenario = writing.scenario %}
+                        <div class="scenario mb-4">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Case Notes</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if scenario.get('patient_name') %}
+                                    <p><strong>Patient:</strong> {{ scenario.patient_name }}{% if scenario.get('age') %}, {{ scenario.age }} years old{% endif %}</p>
+                                    {% endif %}
+
+                                    {% if scenario.get('presenting_complaint') %}
+                                    <p><strong>Presenting Complaint:</strong> {{ scenario.presenting_complaint }}</p>
+                                    {% endif %}
+
+                                    {% if scenario.get('examination_findings') %}
+                                    <p><strong>Examination Findings:</strong> {{ scenario.examination_findings }}</p>
+                                    {% endif %}
+
+                                    {% if scenario.get('referral_to') %}
+                                    <p><strong>Referral to:</strong> {{ scenario.referral_to }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="writing-task">
+                            <h5>Task</h5>
+                            <p>{{ scenario.get('task_instructions', 'Write a referral letter based on the case notes above.') }}</p>
+
+                            <textarea class="form-control" name="question_writing" rows="15" 
+                                      placeholder="Write your referral letter here..."></textarea>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Speaking Section -->
+                    {% if 'speaking' in sections %}
+                    <div id="speakingSection" class="test-section" style="display: none;">
+                        <h3><i class="fas fa-microphone me-2"></i>Speaking Section</h3>
+                        {% set speaking = sections.speaking %}
+
+                        {% if speaking.get('role_plays') %}
+                            {% for roleplay in speaking.role_plays %}
+                            <div class="roleplay mb-4">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning">
+                                        <h5 class="mb-0">Role Play {{ loop.index }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        {% if roleplay.get('setting') %}
+                                        <p><strong>Setting:</strong> {{ roleplay.setting }}</p>
+                                        {% endif %}
+
+                                        {% if roleplay.get('your_role') %}
+                                        <p><strong>Your Role:</strong> {{ roleplay.your_role }}</p>
+                                        {% endif %}
+
+                                        {% if roleplay.get('patient') %}
+                                        <p><strong>Patient/Client:</strong> {{ roleplay.patient }}</p>
+                                        {% endif %}
+
+                                        {% if roleplay.get('task') %}
+                                        <p><strong>Task:</strong> {{ roleplay.task }}</p>
+                                        {% endif %}
+
+                                        <p><strong>Time Limit:</strong> {{ roleplay.get('time_limit', 5) }} minutes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <div class="speaking-response">
+                                <h5>Speaking Response</h5>
+                                <p>Record or describe your speaking performance:</p>
+                                <textarea class="form-control" name="question_speaking" rows="8" 
+                                          placeholder="Describe your speaking performance or provide notes..."></textarea>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <script>
+                    function showSection(sectionName) {
+                        // Hide all sections
+                        document.querySelectorAll('.test-section').forEach(section => {
+                            section.style.display = 'none';
+                        });
+
+                        // Remove active class from all buttons
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+
+                        // Show selected section
+                        const section = document.getElementById(sectionName + 'Section');
+                        if (section) {
+                            section.style.display = 'block';
+                        }
+
+                        // Add active class to clicked button
+                        event.target.classList.add('active');
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="card border-0 shadow-sm mt-4 glass-card">
+            <div class="card-body py-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Complete all sections</strong> before submitting your mock test.
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check me-2"></i>Submit Complete Mock Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form></div>
+</div>
+
+<script>
+let startTime = Date.now();
+let timerInterval = null;
+let testDurationMinutes = {{ test.duration_minutes }};
+
+document.addEventListener('DOMContentLoaded', function() {
+    startTimer(testDurationMinutes);
+});
+
+function startTimer(minutes) {
+    let timeLeft = minutes * 60;
+
+    timerInterval = setInterval(() => {
+        const minutesLeft = Math.floor(timeLeft / 60);
+        const secondsLeft = timeLeft % 60;
+
+        document.getElementById('timer').textContent = 
+            `${minutesLeft}:${secondsLeft.toString().padStart(2, '0')}`;
+
+        if (timeLeft <= 300) {
+            document.getElementById('timer').className = 'h4 mb-0 text-danger';
+        } else if (timeLeft <= 600) {
+            document.getElementById('timer').className = 'h4 mb-0 text-warning';
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('testForm').submit();
+        }
+
+        timeLeft--;
+    }, 1000);
+}
+</script>
+{% endblock %}

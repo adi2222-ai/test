@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+
+{% block title %}User Search - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1><i class="fas fa-search me-2"></i>Search Users</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" 
+                           placeholder="Search by username..." value="{{ search_term }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if users %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Search Results ({{ users|length }} users found)</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Subscription</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.subscription_type %}
+                                    <span class="badge bg-success">{{ user.subscription_type }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Free</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at if user.created_at else 'N/A' }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_user_detail', user_id=user.id) }}" 
+                                   class="btn btn-sm btn-primary">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% elif search_term %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No users found matching "{{ search_term }}"
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
